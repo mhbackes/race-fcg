@@ -31,7 +31,7 @@ public:
 	Bounding_box get_bounding_box();
 	bool intersects(Bounding_box& b);
 	bool intersects(Rectangle& r);
-	bool intersects(Circle& c);
+	bool intersects(Circle& c); // não é 100% precisa, mas é suficiente
 	Point get_center();
 	Angle get_angle();
 	float get_height();

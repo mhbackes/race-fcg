@@ -67,8 +67,12 @@ bool Rectangle::intersects(Rectangle& r) {
 }
 
 bool Rectangle::intersects(Circle& c) {
-	Bounding_box bbox = get_bounding_box();
-	return c.intersects(bbox);
+	vector<Point> v = get_vertex();
+	for(Point& vertex : v){
+		if(c.contains(vertex))
+			return true;
+	}
+	return false;
 }
 
 Rectangle::~Rectangle() {

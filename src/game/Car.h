@@ -41,6 +41,7 @@ public:
 	bool is_on_track();
 
 	bool intersects(Rectangle& r);
+	bool intersects(Circle& r);
 	bool intersects(Car& c);
 
 	Rectangle& get_position();

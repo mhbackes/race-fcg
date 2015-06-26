@@ -95,6 +95,10 @@ bool Car::is_on_track() {
 	return t.contains(*this);
 }
 
+bool Car::intersects(Circle& r) {
+	return position.intersects(r);
+}
+
 Car::~Car() {
 	// TODO Auto-generated destructor stub
 }
