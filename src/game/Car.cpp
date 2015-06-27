@@ -19,7 +19,7 @@ Car::Car() {
 	this->race = nullptr;
 	this->position = Rectangle();
 	this->speed = 0;
-	this->gas_acceleration = 1;
+	this->gas_acceleration = 0.5;
 	this->idle_acceleration = -0.5;
 	this->brake_acceleration = -1;
 	this->turn_angle = 10;
