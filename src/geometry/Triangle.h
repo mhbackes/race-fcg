@@ -12,6 +12,8 @@
 
 class Triangle {
 public:
+	static float area(Point& p0, Point& p1, Point& p2);
+
 	Point p0, p1, p2;
 	Triangle();
 	Triangle(Point& p0, Point& p1, Point& p2);

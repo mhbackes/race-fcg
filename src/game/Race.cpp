@@ -16,6 +16,7 @@ Race::Race() {
 
 void Race::update() {
 	player_car.update();
+	dummy_car.update();
 	curr_time = clock();
 }
 

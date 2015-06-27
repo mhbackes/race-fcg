@@ -32,6 +32,7 @@ public:
 	bool intersects(Bounding_box& b);
 	bool intersects(Rectangle& r);
 	bool intersects(Circle& c); // não é 100% precisa, mas é suficiente
+	bool contains(Point& p);
 	Point& get_center();
 	Angle& get_angle();
 	float get_height();

@@ -37,6 +37,8 @@ struct Car {
 	std::vector<glm::vec3> normals;
 	int vertex_data_size;
 
+	bool turn_l, turn_r;
+
 	void limit_speed(float min, float max);
 
 	static const float MAX_SPEED;
@@ -51,7 +53,9 @@ struct Car {
 	void brake();
 	void turn_left();
 	void turn_right();
+
 	void update();
+	void turn(Rectangle& pos);
 
 	bool is_on_track();
 

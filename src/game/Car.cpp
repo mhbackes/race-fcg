@@ -23,6 +23,8 @@ Car::Car() {
 	this->idle_acceleration = -0.5;
 	this->brake_acceleration = -1;
 	this->turn_angle = 10;
+	this->turn_l = false;
+	this->turn_r = false;
 }
 
 void Car::gas() {
@@ -60,16 +62,18 @@ Car::Car(Race *r, Rectangle& pos, float ga, float ia, float ba, Angle ta) {
 	brake_acceleration = ba;
 	turn_angle = ta;
 	speed = 0;
+	this->turn_l = false;
+	this->turn_r = false;
 }
 
 void Car::turn_left() {
 	if (speed != 0)
-		position.rotate_counter_clockwise(turn_angle);
+		turn_l = true;
 }
 
 void Car::turn_right() {
 	if (speed != 0)
-		position.rotate_clockwise(turn_angle);
+		turn_r = true;
 }
 
 void Car::update() {
@@ -77,12 +81,18 @@ void Car::update() {
 		limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
 	float dx = -speed * position.get_angle().cos();
 	float dy = -speed * position.get_angle().sin();
-	Rectangle& new_pos = position;
-	position.move(dx, dy);
+	Rectangle new_pos = position;
+	new_pos.move(dx, dy);
+	turn(new_pos);
 	// TODO check collisions with other objects
+	if (this == &(race->dummy_car) && race->player_car.intersects(new_pos)) {
+		speed = 0;
+	} else if (this == &(race->player_car) && race->dummy_car.intersects(new_pos)) {
+		speed = 0;
+	} else {
+		position = new_pos;
+	}
 
-	// if no collision
-	position = new_pos;
 }
 
 bool Car::intersects(Rectangle& r) {
@@ -194,6 +204,17 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	draw_position(mvp, modelID, mvpID);
 }
 
+void Car::turn(Rectangle& pos) {
+	if (turn_l) {
+		pos.rotate_counter_clockwise(turn_angle);
+		turn_l = false;
+	}
+	if (turn_r) {
+		pos.rotate_clockwise(turn_angle);
+		turn_r = false;
+	}
+}
+
 Car::~Car() {
 	// TODO Auto-generated destructor stub
 }
@@ -213,7 +234,6 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glVertex3f(v[1].x, 0.2, v[1].y);
 	glVertex3f(v[2].x, 0.2, v[2].y);
 	glVertex3f(v[3].x, 0.2, v[3].y);
-
 
 	//glVertex3f(v[0].x, 0.1, v[0].y);
 	glEnd();

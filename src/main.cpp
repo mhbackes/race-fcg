@@ -51,9 +51,8 @@ int init_resources() {
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
-	programID = LoadShaders("resources/shader/vertex.shader", "resources/shader/fragment.shader");
-	/*programID = LoadShaders("/home/prlanzarin/github/race-fcg/resources/shader/vertex.shader",
-			"/home/prlanzarin/github/race-fcg/resources/shader/fragment.shader"); */
+	programID = LoadShaders("resources/shader/vertex.shader",
+			"resources/shader/fragment.shader");
 	glUseProgram(programID);
 	mvpID = glGetUniformLocation(programID, "MVP");
 	modelID = glGetUniformLocation(programID, "model");
@@ -61,22 +60,24 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(0, 0), Angle(90), 8.0, 3);
+	Rectangle car_pos(Point(0, 40), Angle(90), 8.0, 3);
 	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
+	race.player_car.load_model("resources/objects/camaro.obj",
+			"resources/textures/camaro.bmp", programID);
 
+	//dummy car
+	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 8.0, 3);
+	race.dummy_car = Car(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
+	race.dummy_car.speed = 1;
+	race.dummy_car.load_model("resources/objects/camaro.obj",
+			"resources/textures/camaro.bmp", programID);
 
 	//camera
 	race.camera = Camera(&race.player_car);
 
 	//track
-	/*race.track.load_model("/home/prlanzarin/github/race-fcg/resources/objects/gpdoquadrado.obj",
-			"/home/prlanzarin/github/race-fcg/resources/textures/green.bmp", programID);
-	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
-			"/home/prlanzarin/github/race-fcg/resources/textures/camaro.bmp", programID);*/
 	race.track.load_model("resources/objects/gpdoquadrado.obj",
-				"resources/textures/green.bmp", programID);
-	race.player_car.load_model("resources/objects/camaro.obj",
-				"resources/textures/camaro.bmp", programID);
+			"resources/textures/green.bmp", programID);
 
 	//race
 	race.reset_time();
@@ -89,9 +90,9 @@ void keyboardDown(unsigned char key, int x, int y) {
 
 	keystates[key] = true;
 
-	if(key == 'v'){
+	if (key == 'v') {
 		race.camera.toggle_eagle();
-	} else if (key == 'V'){
+	} else if (key == 'V') {
 		race.camera.toggle_rear();
 	}
 }
@@ -105,7 +106,7 @@ void keyboardUp(unsigned char key, int x, int y) {
 float roty = 180;
 void idle() {
 	clock_t curr_time = clock();
-	if((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
+	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
 		return;
 
 	if (keystates['s'])
@@ -146,6 +147,7 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
+	race.dummy_car.draw(mvp, modelID, mvpID);
 	race.track.draw(mvp, modelID, mvpID);
 
 	glutSwapBuffers();
@@ -165,7 +167,6 @@ void free_resources() {
 }
 
 int main(int argc, char* argv[]) {
-
 	//inicia janela
 	glutInit(&argc, argv);
 	glutInitDisplayMode(

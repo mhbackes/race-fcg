@@ -25,6 +25,8 @@ struct Race {
 	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
 
+	Car dummy_car;
+
 	void reset_time();
 	void update();
 

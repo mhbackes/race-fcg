@@ -6,6 +6,8 @@
  */
 
 #include "Rectangle.h"
+#include "Triangle.h"
+#include <cfloat>
 
 Rectangle::Rectangle() {
 	center = Point();
@@ -62,17 +64,59 @@ bool Rectangle::intersects(Bounding_box& b) {
 }
 
 bool Rectangle::intersects(Rectangle& r) {
-	Bounding_box r_bbox = r.get_bounding_box();
-	return intersects(r_bbox);
+//	Bounding_box r_bbox = r.get_bounding_box();
+//	return intersects(r_bbox);
+	vector<Point> u = get_vertex();
+	for (Point &p : u) {
+		if (r.contains(p)) {
+			return true;
+		}
+	}
+	vector<Point> v = r.get_vertex();
+	for (Point &p : v) {
+		if (contains(p)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Rectangle::intersects(Circle& c) {
 	vector<Point> v = get_vertex();
-	for(Point& vertex : v){
-		if(c.contains(vertex))
+	for (Point& vertex : v) {
+		if (c.contains(vertex))
 			return true;
 	}
 	return false;
+}
+
+bool Rectangle::contains(Point& p) {
+	vector<Point> v = get_vertex();
+	Point &a = v[0], &b = v[1], &c = v[2], &d = v[3];
+//	Point e = b - a;
+//	Point f = d - a;
+//
+//	float r0 = (p.x - a.x) * e.x + (p.y - a.y) * e.y;
+//	if (r0 < 0)
+//		return false;
+//	float r1 = (p.x - b.x) * e.x + (p.y - b.y) * e.y;
+//	if (r1 > 0)
+//		return false;
+//	float r2 = (p.x - a.x) * f.x + (p.y - a.y) * f.y;
+//	if (r2 < 0)
+//		return false;
+//	float r3 = (p.x - d.x) * f.x + (p.y - d.y) * f.y;
+//	if (r3 > 0)
+//		return false;
+//	return true;
+
+	float a0 = Triangle::area(p, a, b);
+	float a1 = Triangle::area(p, b, c);
+	float a2 = Triangle::area(p, c, d);
+	float a3 = Triangle::area(p, d, a);
+	float area_sum = a0 + a1 + a2 + a3;
+	float area_rec = base * height;
+	return area_sum <= area_rec + FLT_EPSILON;
 }
 
 Rectangle::~Rectangle() {
@@ -81,7 +125,7 @@ Rectangle::~Rectangle() {
 
 vector<Point> Rectangle::get_vertex() {
 	vector<Point> v(4);
-	float half_base = base /2;
+	float half_base = base / 2;
 	float half_height = height / 2;
 	v[0] = Point(half_height, half_base);
 	v[1] = Point(-half_height, half_base);
@@ -89,7 +133,7 @@ vector<Point> Rectangle::get_vertex() {
 	v[3] = Point(-half_height, -half_base);
 	float cos_angle = angle.cos();
 	float sin_angle = angle.sin();
-	for(Point& p : v){
+	for (Point& p : v) {
 		float x = p.x * cos_angle - p.y * sin_angle;
 		float y = p.x * sin_angle + p.y * cos_angle;
 		p = Point(x, y) + center;
