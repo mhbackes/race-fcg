@@ -1,11 +1,11 @@
+#include "objloader.h"
+
 #include <vector>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <cstring>
 #include <iostream>
-#include "../glm/glm.hpp"
 
-#include "objloader.hpp"
 
 // Very, VERY simple OBJ loader.
 // Here is a short list of features a real function would provide :

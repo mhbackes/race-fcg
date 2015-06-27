@@ -14,18 +14,12 @@ Angle::Angle(float angle) {
 
 void Angle::clockwise(float angle) {
 	this->angle -= angle;
-	if (this->angle >= 360)
-		this->angle -= 360;
-	if (this->angle < 0)
-		this->angle += 360;
+	this->angle = limit(this->angle);
 }
 
 void Angle::counter_clockwise(float angle) {
 	this->angle += angle;
-	if (this->angle >= 360)
-		this->angle -= 360;
-	if (this->angle < 0)
-		this->angle += 360;
+	this->angle = limit(this->angle);
 }
 
 float Angle::get_degree() {
@@ -44,7 +38,8 @@ void Angle::counter_clockwise(Angle angle) {
 	counter_clockwise(angle.get_degree());
 }
 
-Angle::Angle(const Angle& angle) : Angle(angle.angle) {
+Angle::Angle(const Angle& angle) :
+		Angle(angle.angle) {
 }
 
 double Angle::sin() {
@@ -55,9 +50,18 @@ double Angle::cos() {
 	return std::cos(get_rad());
 }
 
+double Angle::limit(double angle) {
+	if (angle >= 360)
+		angle -= 360;
+	if (angle < 0)
+		angle += 360;
+	return angle;
+}
+
 Angle::~Angle() {
 	// TODO Auto-generated destructor stub
 }
 
-Angle::Angle() : Angle(0) {
+Angle::Angle() :
+		Angle(0) {
 }

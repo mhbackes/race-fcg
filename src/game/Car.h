@@ -10,10 +10,15 @@
 
 #include "../geometry/Rectangle.h"
 #include "../geometry/Angle.h"
+#include "glm/glm.hpp"
+#include "GL/glew.h"
+#include "GL/freeglut.h"
+
+#include "../common/objloader.h"
 
 struct Race;
 
-class Car {
+struct Car {
 	Race* race;
 	Rectangle position;
 	float speed;
@@ -22,8 +27,18 @@ class Car {
 	float brake_acceleration;
 	Angle turn_angle;
 
+	GLuint vertexID;
+	GLuint vertexBuffer;
+	GLuint uvBuffer;
+	GLuint vertexArray;
+	GLuint textureID;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
+	int vertex_data_size;
+
 	void limit_speed(float min, float max);
-public:
+
 	static const float MAX_SPEED;
 	static const float MIN_SPEED;
 	static const float MAX_SPEED_OUTSIDE_TRACK;
@@ -45,6 +60,9 @@ public:
 	bool intersects(Car& c);
 
 	Rectangle& get_position();
+
+	bool load_model(char* obj_path, char* bmp_path, GLuint programID);
+	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
 
 	virtual ~Car();
 };

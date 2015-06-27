@@ -9,6 +9,8 @@
 #include "../geometry/Rectangle.h"
 #include "../geometry/Angle.h"
 #include "../geometry/Point.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 Camera::Camera() {
 	// TODO Auto-generated constructor stub
@@ -29,20 +31,22 @@ glm::mat4 Camera::mvp() {
 glm::vec3 Camera::eye() {
 	glm::vec3 eye;
 	Rectangle& car_pos = car->get_position();
-	Angle car_to_eye_angle = car_pos.get_angle() - Angle(180);
+	Angle car_to_eye_angle = Angle(90) - car_pos.get_angle();
 	Point car_center = car_pos.get_center();
-	eye.x = car_to_eye_angle.cos() * 10 + car_center.x;
-	eye.y = car_to_eye_angle.sin() * 10 + car_center.y;
+	eye.x = car_to_eye_angle.cos() * 6 + car_center.x;
+	eye.y = 3;
+	eye.z = car_to_eye_angle.sin() * 6 + car_center.y;
 	return eye;
 }
 
 glm::vec3 Camera::car_front() {
 	glm::vec3 car_front;
 	Rectangle& car_pos = car->get_position();
-	Angle car_to_eye_angle = car_pos.get_angle();
+	Angle car_to_eye_angle =  Angle(-90) - car_pos.get_angle();
 	Point car_center = car_pos.get_center();
-	car_front.x = car_to_eye_angle.cos() * 5 + car_center.x;
-	car_front.y = car_to_eye_angle.sin() * 5 + car_center.y;
+	car_front.x = car_to_eye_angle.cos() * 7 + car_center.x;
+	car_front.y = 0;
+	car_front.z = car_to_eye_angle.sin() * 7 + car_center.y;
 	return car_front;
 }
 

@@ -23,11 +23,15 @@ public:
 	double sin();
 	double cos();
 
+	static double limit(double angle);
+
 	friend Angle operator+(const Angle& lhs, const Angle& rhs){
-		return Angle(lhs.angle + rhs.angle);
+		double angle = limit(lhs.angle + rhs.angle);
+		return Angle(angle);
 	}
 	friend Angle operator-(const Angle& lhs, const Angle& rhs){
-		return Angle(lhs.angle - rhs.angle);
+		double angle = limit(lhs.angle - rhs.angle);
+		return Angle(angle);
 	}
 
 	virtual ~Angle();

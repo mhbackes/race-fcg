@@ -32,8 +32,8 @@ public:
 	bool intersects(Bounding_box& b);
 	bool intersects(Rectangle& r);
 	bool intersects(Circle& c); // não é 100% precisa, mas é suficiente
-	Point get_center();
-	Angle get_angle();
+	Point& get_center();
+	Angle& get_angle();
 	float get_height();
 	float get_base();
 	vector<Point> get_vertex();

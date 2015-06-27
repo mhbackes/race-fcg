@@ -13,14 +13,19 @@
 #include "Checkpoint.h"
 #include "Camera.h"
 #include <vector>
+#include <ctime>
 using std::vector;
 
 struct Race {
+	static const clock_t clocks_per_frame;
+
 	Camera camera;
 	Car player_car;
 	Track track;
+	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
 
+	void reset_time();
 	void update();
 
 	Race();

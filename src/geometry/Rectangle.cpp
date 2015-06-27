@@ -22,22 +22,22 @@ Rectangle::Rectangle(Point center, Angle angle, float height, float base) {
 }
 
 void Rectangle::rotate_clockwise(Angle angle) {
-	this->angle.clockwise(angle);
+	this->angle.counter_clockwise(angle);
 }
 
 void Rectangle::rotate_counter_clockwise(Angle angle) {
-	this->angle.counter_clockwise(angle);
+	this->angle.clockwise(angle);
 }
 
 void Rectangle::move(float dx, float dy) {
 	center.move(dx, dy);
 }
 
-Point Rectangle::get_center() {
+Point& Rectangle::get_center() {
 	return center;
 }
 
-Angle Rectangle::get_angle() {
+Angle& Rectangle::get_angle() {
 	return angle;
 }
 
