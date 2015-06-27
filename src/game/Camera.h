@@ -9,6 +9,8 @@
 #define GAME_CAMERA_H_
 
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Car.h"
 
 struct Camera {
@@ -17,6 +19,8 @@ struct Camera {
 	Camera();
 	Camera(Car* car);
 
+	glm::vec3 eye();
+	glm::vec3 car_front();
 	glm::mat4 mvp();
 
 	virtual ~Camera();
