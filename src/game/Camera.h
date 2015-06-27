@@ -21,6 +21,8 @@ struct Camera {
 
 	glm::vec3 eye();
 	glm::vec3 car_front();
+	glm::vec3 car_center();
+	glm::vec3 eagle_eye();
 	glm::mat4 mvp();
 
 	virtual ~Camera();

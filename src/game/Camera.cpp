@@ -23,7 +23,8 @@ Camera::Camera(Car* car) {
 
 glm::mat4 Camera::mvp() {
 	glm::mat4 model = glm::mat4(1.0);
-	glm::mat4 view = glm::lookAt(eye(), car_front(), glm::vec3(0, 1, 0));
+	//glm::mat4 view = glm::lookAt(eye(), car_front(), glm::vec3(0, 1, 0)); //actual code
+	glm::mat4 view = glm::lookAt(eagle_eye(), car_center(), glm::vec3(0, 1, 0));
 	glm::mat4 projection = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.0f);
 	return projection * view * model;
 }
@@ -31,7 +32,7 @@ glm::mat4 Camera::mvp() {
 glm::vec3 Camera::eye() {
 	glm::vec3 eye;
 	Rectangle& car_pos = car->get_position();
-	Angle car_to_eye_angle = Angle(90) - car_pos.get_angle();
+	Angle car_to_eye_angle = car_pos.get_angle();
 	Point car_center = car_pos.get_center();
 	eye.x = car_to_eye_angle.cos() * 6 + car_center.x;
 	eye.y = 3;
@@ -42,12 +43,32 @@ glm::vec3 Camera::eye() {
 glm::vec3 Camera::car_front() {
 	glm::vec3 car_front;
 	Rectangle& car_pos = car->get_position();
-	Angle car_to_eye_angle =  Angle(-90) - car_pos.get_angle();
+	Angle car_to_eye_angle = car_pos.get_angle() - Angle(180);
 	Point car_center = car_pos.get_center();
 	car_front.x = car_to_eye_angle.cos() * 7 + car_center.x;
 	car_front.y = 0;
 	car_front.z = car_to_eye_angle.sin() * 7 + car_center.y;
 	return car_front;
+}
+
+glm::vec3 Camera::car_center() {
+	glm::vec3 car_center;
+	Rectangle& car_pos = car->get_position();
+	Point car_center_pos = car_pos.get_center();
+	car_center.x = car_center_pos.x + 0.1;
+	car_center.y = 0;
+	car_center.z = car_center_pos.y;
+	return car_center;
+}
+
+glm::vec3 Camera::eagle_eye() {
+	glm::vec3 eagle_eye;
+	Rectangle& car_pos = car->get_position();
+	Point car_center_pos = car_pos.get_center();
+	eagle_eye.x = car_center_pos.x;
+	eagle_eye.y = 30;
+	eagle_eye.z = car_center_pos.y;
+	return eagle_eye;
 }
 
 Camera::~Camera() {
