@@ -75,7 +75,7 @@ int init_resources() {
 			"/home/prlanzarin/github/race-fcg/resources/textures/camaro.bmp", programID);*/
 	race.track.load_model("resources/objects/gpdoquadrado.obj",
 				"resources/textures/green.bmp", programID);
-	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+	race.player_car.load_model("resources/objects/camaro.obj",
 				"resources/textures/camaro.bmp", programID);
 
 	//race
