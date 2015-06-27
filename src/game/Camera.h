@@ -13,16 +13,24 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Car.h"
 
+enum Vision {NORMAL, REAR, EAGLE};
+
 struct Camera {
 	Car* car;
+	Vision vision;
 
 	Camera();
 	Camera(Car* car);
 
-	glm::vec3 eye();
+	void toggle_eagle();
+	void toggle_rear();
+
+	glm::vec3 eye_back();
+	glm::vec3 eye_front();
 	glm::vec3 car_front();
+	glm::vec3 car_back();
 	glm::vec3 car_center();
-	glm::vec3 eagle_eye();
+	glm::vec3 eye_eagle();
 	glm::mat4 mvp();
 
 	virtual ~Camera();

@@ -83,6 +83,11 @@ void keyboardDown(unsigned char key, int x, int y) {
 
 	keystates[key] = true;
 
+	if(key == 'v'){
+		race.camera.toggle_eagle();
+	} else if (key == 'V'){
+		race.camera.toggle_rear();
+	}
 }
 
 void keyboardUp(unsigned char key, int x, int y) {

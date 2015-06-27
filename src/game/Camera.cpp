@@ -19,17 +19,32 @@ Camera::Camera() {
 
 Camera::Camera(Car* car) {
 	this->car = car;
+	this->vision = NORMAL;
 }
 
 glm::mat4 Camera::mvp() {
+	glm::vec3 eye, center;
+	switch (vision) {
+	case NORMAL:
+		eye = eye_back();
+		center = car_front();
+		break;
+	case REAR:
+		eye = eye_front();
+		center = car_back();
+		break;
+	case EAGLE:
+		eye = eye_eagle();
+		center = car_center();
+	}
+
 	glm::mat4 model = glm::mat4(1.0);
-	//glm::mat4 view = glm::lookAt(eye(), car_front(), glm::vec3(0, 1, 0)); //actual code
-	glm::mat4 view = glm::lookAt(eagle_eye(), car_center(), glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(eye, center, glm::vec3(0, 1, 0));
 	glm::mat4 projection = glm::perspective(60.0f, 16.0f / 9.0f, 0.1f, 100.0f);
 	return projection * view * model;
 }
 
-glm::vec3 Camera::eye() {
+glm::vec3 Camera::eye_back() {
 	glm::vec3 eye;
 	Rectangle& car_pos = car->get_position();
 	Angle car_to_eye_angle = car_pos.get_angle();
@@ -61,7 +76,7 @@ glm::vec3 Camera::car_center() {
 	return car_center;
 }
 
-glm::vec3 Camera::eagle_eye() {
+glm::vec3 Camera::eye_eagle() {
 	glm::vec3 eagle_eye;
 	Rectangle& car_pos = car->get_position();
 	Point car_center_pos = car_pos.get_center();
@@ -71,7 +86,48 @@ glm::vec3 Camera::eagle_eye() {
 	return eagle_eye;
 }
 
+glm::vec3 Camera::eye_front() {
+	glm::vec3 eye;
+	Rectangle& car_pos = car->get_position();
+	Angle car_to_eye_angle = car_pos.get_angle() - Angle(180);
+	Point car_center = car_pos.get_center();
+	eye.x = car_to_eye_angle.cos() * 6 + car_center.x;
+	eye.y = 3;
+	eye.z = car_to_eye_angle.sin() * 6 + car_center.y;
+	return eye;
+}
+
+glm::vec3 Camera::car_back() {
+	glm::vec3 car_front;
+	Rectangle& car_pos = car->get_position();
+	Angle car_to_eye_angle = car_pos.get_angle();
+	Point car_center = car_pos.get_center();
+	car_front.x = car_to_eye_angle.cos() * 7 + car_center.x;
+	car_front.y = 0;
+	car_front.z = car_to_eye_angle.sin() * 7 + car_center.y;
+	return car_front;
+}
+
 Camera::~Camera() {
 	// TODO Auto-generated destructor stub
 }
 
+void Camera::toggle_eagle() {
+	switch (vision) {
+	case NORMAL:
+		vision = EAGLE;
+		break;
+	default:
+		vision = NORMAL;
+	}
+}
+
+void Camera::toggle_rear() {
+	switch (vision) {
+	case NORMAL:
+		vision = REAR;
+		break;
+	default:
+		vision = NORMAL;
+	}
+}
