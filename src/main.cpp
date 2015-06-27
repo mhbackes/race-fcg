@@ -52,6 +52,8 @@ int init_resources() {
 
 	//program
 	programID = LoadShaders("resources/shader/vertex.shader", "resources/shader/fragment.shader");
+	/*programID = LoadShaders("/home/prlanzarin/github/race-fcg/resources/shader/vertex.shader",
+			"/home/prlanzarin/github/race-fcg/resources/shader/fragment.shader"); */
 	glUseProgram(programID);
 	mvpID = glGetUniformLocation(programID, "MVP");
 	modelID = glGetUniformLocation(programID, "model");
@@ -67,9 +69,13 @@ int init_resources() {
 	race.camera = Camera(&race.player_car);
 
 	//track
+	/*race.track.load_model("/home/prlanzarin/github/race-fcg/resources/objects/gpdoquadrado.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/green.bmp", programID);
+	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro.bmp", programID);*/
 	race.track.load_model("resources/objects/gpdoquadrado.obj",
-			"resources/textures/green.bmp", programID);
-	race.player_car.load_model("resources/objects/camaro.obj",
+				"resources/textures/green.bmp", programID);
+	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
 				"resources/textures/camaro.bmp", programID);
 
 	//race

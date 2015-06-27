@@ -18,7 +18,7 @@ Car::Car() {
 	this->race = nullptr;
 	this->position = Rectangle();
 	this->speed = 0;
-	this->gas_acceleration = 1;
+	this->gas_acceleration = 0.5;
 	this->idle_acceleration = -0.5;
 	this->brake_acceleration = -1;
 	this->turn_angle = 10;
@@ -72,8 +72,8 @@ void Car::turn_right() {
 }
 
 void Car::update() {
-//	if (!is_on_track())
-//		limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
+	//if (!is_on_track())
+		//limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
 	float dx = -speed * position.get_angle().sin();
 	float dy = -speed * position.get_angle().cos();
 	Rectangle& new_pos = position;
