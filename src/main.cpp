@@ -47,7 +47,7 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	//light
-	gLight.position = glm::vec3(0.0f, 10.0f, -10.0f);
+	gLight.position = glm::vec3(0.0f, 30.0f, -10.0f);
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
@@ -60,13 +60,13 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(0, 40), Angle(90), 8.0, 3);
+	Rectangle car_pos(Point(0, 40), Angle(90), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
 	//dummy car
-	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 8.0, 3);
+	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
 	race.dummy_car = Car(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
 	race.dummy_car.speed = 1;
 	race.dummy_car.load_model("resources/objects/camaro.obj",
