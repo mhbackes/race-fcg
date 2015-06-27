@@ -8,11 +8,12 @@
 #include "Car.h"
 #include "Race.h"
 #include "../common/texture.hpp"
+#include <iostream>
 
 const float Car::MAX_SPEED = 1;
-const float Car::MIN_SPEED = -1;
-const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.5;
-const float Car::MIN_SPEED_OUTSIDE_TRACK = -0.25;
+const float Car::MIN_SPEED = -0.5;
+const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.2;
+const float Car::MIN_SPEED_OUTSIDE_TRACK = -0.1;
 
 Car::Car() {
 	this->race = nullptr;
@@ -63,19 +64,19 @@ Car::Car(Race *r, Rectangle& pos, float ga, float ia, float ba, Angle ta) {
 
 void Car::turn_left() {
 	if (speed != 0)
-		position.rotate_clockwise(turn_angle);
+		position.rotate_counter_clockwise(turn_angle);
 }
 
 void Car::turn_right() {
 	if (speed != 0)
-		position.rotate_counter_clockwise(turn_angle);
+		position.rotate_clockwise(turn_angle);
 }
 
 void Car::update() {
-	//if (!is_on_track())
-		//limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
-	float dx = -speed * position.get_angle().sin();
-	float dy = -speed * position.get_angle().cos();
+	if (!is_on_track())
+		limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
+	float dx = -speed * position.get_angle().cos();
+	float dy = -speed * position.get_angle().sin();
 	Rectangle& new_pos = position;
 	position.move(dx, dy);
 	// TODO check collisions with other objects
@@ -145,19 +146,18 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 	// connect the xyz to the "vert" attribute of the vertex shader
 	glEnableVertexAttribArray(glGetAttribLocation(programID, "vert"));
 	glVertexAttribPointer(glGetAttribLocation(programID, "vert"), 3, GL_FLOAT,
-			GL_FALSE, 8 * sizeof(GLfloat),
-			(const GLvoid*) (0 * sizeof(GLfloat)));
+	GL_FALSE, 8 * sizeof(GLfloat), (const GLvoid*) (0 * sizeof(GLfloat)));
 
 	// connect the uv coords to the "vertTexCoord" attribute of the vertex shader
 	glEnableVertexAttribArray(glGetAttribLocation(programID, "vertTexCoord"));
 	glVertexAttribPointer(glGetAttribLocation(programID, "vertTexCoord"), 2,
-			GL_FLOAT, GL_TRUE, 8 * sizeof(GLfloat),
+	GL_FLOAT, GL_TRUE, 8 * sizeof(GLfloat),
 			(const GLvoid*) (3 * sizeof(GLfloat)));
 
 	// connect the normal to the "vertNormal" attribute of the vertex shader
 	glEnableVertexAttribArray(glGetAttribLocation(programID, "vertNormal"));
 	glVertexAttribPointer(glGetAttribLocation(programID, "vertNormal"), 3,
-			GL_FLOAT, GL_TRUE, 8 * sizeof(GLfloat),
+	GL_FLOAT, GL_TRUE, 8 * sizeof(GLfloat),
 			(const GLvoid*) (5 * sizeof(GLfloat)));
 
 	// unbind the VAO
@@ -172,7 +172,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 car_pos = glm::vec3(car_center.x, 0, car_center.y);
 	glm::mat4 rotation = glm::rotate(onemat,
-			position.get_angle().get_degree() + 180, up);
+			-(position.get_angle() + Angle(90)).get_degree(), up);
 	glm::mat4 size = glm::mat4(1);
 	glm::mat4 translation = glm::translate(onemat, car_pos);
 	glm::mat4 model = translation * size * rotation;
@@ -191,8 +191,31 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glBindVertexArray(vertexBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
+	draw_position(mvp, modelID, mvpID);
 }
 
 Car::~Car() {
 	// TODO Auto-generated destructor stub
+}
+
+void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
+	glm::mat4 model(1.0);
+	glm::mat4 MVP = mvp * model;
+
+	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
+
+	vector<Point> v = position.get_vertex();
+
+	glColor3f(1.0, 1.0, 0.0);
+	glBegin(GL_QUAD_STRIP);
+	glVertex3f(v[0].x, 0.2, v[0].y);
+	glVertex3f(v[1].x, 0.2, v[1].y);
+	glVertex3f(v[2].x, 0.2, v[2].y);
+	glVertex3f(v[3].x, 0.2, v[3].y);
+
+
+	//glVertex3f(v[0].x, 0.1, v[0].y);
+	glEnd();
+	glFlush();
 }

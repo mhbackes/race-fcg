@@ -8,6 +8,9 @@
 #ifndef GLM_POINT_H_
 #define GLM_POINT_H_
 
+#include <string>
+using std::string;
+
 class Point {
 public:
 	float x, y;
@@ -23,6 +26,8 @@ public:
 	friend Point operator-(const Point& p, const Point& q) {
 		return Point(p.x - q.x, p.y - q.y);
 	}
+	string to_string();
+
 
 	virtual ~Point();
 };

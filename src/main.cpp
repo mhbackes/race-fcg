@@ -61,7 +61,7 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(0, 0), Angle(0), 4.0, 1.5);
+	Rectangle car_pos(Point(0, 0), Angle(90), 8.0, 3);
 	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
 
 

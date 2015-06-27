@@ -64,6 +64,8 @@ struct Car {
 	bool load_model(char* obj_path, char* bmp_path, GLuint programID);
 	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
 
+	void draw_position(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
+
 	virtual ~Car();
 };
 

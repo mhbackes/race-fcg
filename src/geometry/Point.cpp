@@ -7,6 +7,8 @@
 
 #include "Point.h"
 #include <cmath>
+#include <sstream>
+using std::stringstream;
 
 Point::Point(float x, float y) {
 	this->x = x;
@@ -29,4 +31,10 @@ float Point::distance(Point& p) {
 	float diff_x = x - p.x;
 	float diff_y = y - p.y;
 	return sqrt(diff_x * diff_x + diff_y * diff_y);
+}
+
+string Point::to_string() {
+	stringstream stream;
+	stream << "(" << x << ", " << y << ")";
+	return stream.str();
 }
