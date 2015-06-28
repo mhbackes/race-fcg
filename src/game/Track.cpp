@@ -19,8 +19,7 @@ Track::Track(vector<Triangle>& tps) {
 }
 
 bool Track::contains(Car& car) {
-	Rectangle car_pos = car.get_position();
-	vector<Point> car_vertex = car_pos.get_vertex();
+	vector<Point> car_vertex = car.position.get_vertex();
 	for (Point& v : car_vertex) {
 		bool contains = false;
 		for (Triangle& t : track_parts) {

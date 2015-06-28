@@ -8,6 +8,7 @@
 #ifndef GAME_GAME_H_
 #define GAME_RACE_H_
 
+#include "AICar.h"
 #include "Car.h"
 #include "Track.h"
 #include "Checkpoint.h"
@@ -21,11 +22,10 @@ struct Race {
 
 	Camera camera;
 	Car player_car;
+	vector<AICar> ai_cars;
 	Track track;
 	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
-
-	Car dummy_car;
 
 	void reset_time();
 	void update();

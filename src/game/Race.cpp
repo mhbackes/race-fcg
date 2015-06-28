@@ -11,12 +11,13 @@ const clock_t Race::clocks_per_frame = 0;
 
 Race::Race() {
 	// TODO Auto-generated constructor stub
-
 }
 
 void Race::update() {
 	player_car.update();
-	dummy_car.update();
+	for(AICar& car : ai_cars){
+		car.update();
+	}
 	curr_time = clock();
 }
 

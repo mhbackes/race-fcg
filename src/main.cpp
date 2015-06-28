@@ -47,7 +47,7 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	//light
-	gLight.position = glm::vec3(0.0f, 10.0f, -10.0f);
+	gLight.position = glm::vec3(0.0f, 30.0f, -10.0f);
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
@@ -60,16 +60,17 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(0, 40), Angle(90), 8.0, 3);
+	Rectangle car_pos(Point(0, 40), Angle(90), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
 	//dummy car
-	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 8.0, 3);
-	race.dummy_car = Car(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
-	race.dummy_car.speed = 1;
-	race.dummy_car.load_model("resources/objects/camaro.obj",
+	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
+	AICar dummy_car = AICar(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
+	race.ai_cars.push_back(dummy_car);
+	race.ai_cars[0].speed = 1;
+	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
 	//camera
@@ -147,7 +148,9 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
-	race.dummy_car.draw(mvp, modelID, mvpID);
+	for(AICar& car : race.ai_cars){
+		car.draw(mvp, modelID, mvpID);
+	}
 	race.track.draw(mvp, modelID, mvpID);
 
 	glutSwapBuffers();
