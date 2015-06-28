@@ -9,16 +9,12 @@
 #include "Checkpoint.h"
 #include "../geometry/Point.h"
 
-#include <vector>
-
-#include <string>
+#include <stdio.h>
 
 #include <iostream>
 using std::cout;
 using std::endl;
 
-#include <fstream>
-using std::ifstream;
 
 const clock_t Race::clocks_per_frame = 0;
 
@@ -43,31 +39,26 @@ void Race::reset_time() {
 }
 
 void Race::add_checkpoint(Point center, float radius) {
-	Checkpoint new_checkpoint = Checkpoint(center, radius);
-	checkpoints.push_back(new_checkpoint);
+	checkpoints.push_back(Checkpoint(center, radius));
 }
 
 bool Race::parse_checkpoints(char *cp_path) {
 
-	ifstream file;
-    file.open(cp_path);
-    std::string input;
+	FILE* cp_file = fopen(cp_path, "r");
+	float x,y,radius;
+	int nPar;
 
-	if (!file.good())
-		return false;
-
-	while(!file.eof()) {
-		std::getline(file, input);
-		std::vector<char> buffer(input.begin(), input.end());
-		buffer.push_back('\0');
-
-		char *end;
-		float x = strtof(&buffer[0], &end);
-		float y = strtof(end, NULL);
-		float radius = strtof(&buffer[3], &end);
-
-		Point new_point = Point(x, y);
-		this->add_checkpoint(new_point, radius);
+	if (cp_file == NULL) {
+	   std::cout << "Failed to open " << cp_path << endl;
+	   return false;
 	}
+	nPar = fscanf(cp_file,"%f %f %f\n", &x, &y, &radius);
+	while(nPar != EOF) {
+		if (nPar != 3)
+			return false;
+		this->add_checkpoint(Point(x, y), radius);
+		nPar = fscanf(cp_file,"%f %f %f\n", &x, &y, &radius);
+	}
+
 	return true;
 }
