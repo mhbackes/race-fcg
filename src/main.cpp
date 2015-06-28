@@ -74,16 +74,16 @@ int init_resources() {
 	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
-	// test checkpoints
-	/*
-	Point check_center0(135, -20);
-	Checkpoint c0(check_center0, 10);
-	Point check_center1(-75, -20);
-	Checkpoint c1(check_center1, 10);
+	// checkpoints
+	if(race.parse_checkpoints("resources/etc/checkpoints.txt") == false) {
+		Point check_center0(135, -20);
+		Checkpoint c0(check_center0, 10);
+		Point check_center1(-75, -20);
+		Checkpoint c1(check_center1, 10);
 
-	race.checkpoints.push_back(c0);
-	race.checkpoints.push_back(c1);
-	*/
+		race.checkpoints.push_back(c0);
+		race.checkpoints.push_back(c1);
+	}
 
 	//camera
 	//race.camera = Camera(&race.player_car); // camera on player
@@ -93,8 +93,7 @@ int init_resources() {
 	race.track.load_model("resources/objects/dijon.obj",
 			"resources/textures/road.bmp", programID);
 
-	//checkpoints parsing
-	race.parse_checkpoints("resources/etc/checkpoints.txt");
+
 
 	//race
 	race.reset_time();
@@ -116,9 +115,9 @@ void keyboardDown(unsigned char key, int x, int y) {
 	if (key == 'c') {
 		Point np = race.player_car.position.get_center();
 		std::ofstream cp;
-		cp.open("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
+		cp.open("resources/etc/checkpoints.txt",
 				std::ios_base::app);
-		cp << np.x << " " << np.y << " " << 6 << std::endl;
+		cp << np.x << " " << np.y << " " << 10 << std::endl;
 		cp.close();
 	}
 }
