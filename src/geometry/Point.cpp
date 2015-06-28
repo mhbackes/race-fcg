@@ -38,3 +38,11 @@ string Point::to_string() {
 	stream << "(" << x << ", " << y << ")";
 	return stream.str();
 }
+
+Angle Point::angle(Point& a, Point& b) {
+	float distpa = distance(a);
+	float distpb = distance(b);
+	float distab = a.distance(b);
+	float angle = acos((distpa * distpa + distpb * distpb + distab * distab) / (2 * distpa * distpb));
+	return Angle(angle * 180 / M_PI);
+}

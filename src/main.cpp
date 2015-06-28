@@ -65,16 +65,25 @@ int init_resources() {
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
-	//dummy car
+	//ia car
 	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
 	race.ai_cars.push_back(dummy_car);
-	race.ai_cars[0].speed = 1;
 	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
+	//checkpoint
+	Point check_center0(135, -20);
+	Checkpoint c0(check_center0, 10);
+	Point check_center1(-75, -20);
+	Checkpoint c1(check_center1, 10);
+
+	race.checkpoints.push_back(c0);
+	race.checkpoints.push_back(c1);
+
 	//camera
-	race.camera = Camera(&race.player_car);
+//	race.camera = Camera(&race.player_car); // camera on player
+	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
@@ -148,10 +157,15 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
-	for(AICar& car : race.ai_cars){
+	for (AICar& car : race.ai_cars) {
 		car.draw(mvp, modelID, mvpID);
 	}
 	race.track.draw(mvp, modelID, mvpID);
+
+	std::cout << "Position: "
+			<< race.ai_cars[0].position.get_center().to_string() << " Check: "
+			<< race.ai_cars[0].checkpoint << " Lap: " << race.ai_cars[0].lap
+			<< std::endl;
 
 	glutSwapBuffers();
 	glutPostRedisplay();

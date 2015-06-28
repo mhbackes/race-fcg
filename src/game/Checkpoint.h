@@ -10,8 +10,7 @@
 
 #include "../geometry/Circle.h"
 
-class Checkpoint : public Circle{
-public:
+struct Checkpoint : public Circle{
 	Checkpoint();
 	Checkpoint(Point& center, float radius);
 	virtual ~Checkpoint();
