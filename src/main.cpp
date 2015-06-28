@@ -76,8 +76,8 @@ int init_resources() {
 	race.camera = Camera(&race.player_car);
 
 	//track
-	race.track.load_model("resources/objects/gpdoquadrado.obj",
-			"resources/textures/green.bmp", programID);
+	race.track.load_model("resources/objects/dijon.obj",
+			"resources/textures/road.bmp", programID);
 
 	//race
 	race.reset_time();
