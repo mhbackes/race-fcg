@@ -84,15 +84,12 @@ void Car::update() {
 	Rectangle new_pos = position;
 	new_pos.move(dx, dy);
 	turn(new_pos);
-	// TODO check collisions with other objects
-	if (this == &(race->dummy_car) && race->player_car.intersects(new_pos)) {
+	if(collides(new_pos)){
 		speed = 0;
-	} else if (this == &(race->player_car) && race->dummy_car.intersects(new_pos)) {
-		speed = 0;
-	} else {
-		position = new_pos;
+		return;
 	}
-
+	position = new_pos;
+	//TODO check collision with checkpoints
 }
 
 bool Car::intersects(Rectangle& r) {
@@ -100,11 +97,7 @@ bool Car::intersects(Rectangle& r) {
 }
 
 bool Car::intersects(Car& c) {
-	return intersects(c.get_position());
-}
-
-Rectangle& Car::get_position() {
-	return position;
+	return intersects(c.position);
 }
 
 bool Car::is_on_track() {
@@ -238,4 +231,12 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	//glVertex3f(v[0].x, 0.1, v[0].y);
 	glEnd();
 	glFlush();
+}
+
+bool Car::collides(Rectangle& pos) {
+	for(AICar& car : race->ai_cars){
+		if(this != &car && car.intersects(pos))
+			return true;
+	}
+	return false;
 }

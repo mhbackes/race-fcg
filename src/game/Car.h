@@ -62,8 +62,7 @@ struct Car {
 	bool intersects(Rectangle& r);
 	bool intersects(Circle& r);
 	bool intersects(Car& c);
-
-	Rectangle& get_position();
+	virtual bool collides(Rectangle& new_pos);
 
 	bool load_model(char* obj_path, char* bmp_path, GLuint programID);
 	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);

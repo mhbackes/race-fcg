@@ -67,9 +67,10 @@ int init_resources() {
 
 	//dummy car
 	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
-	race.dummy_car = Car(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
-	race.dummy_car.speed = 1;
-	race.dummy_car.load_model("resources/objects/camaro.obj",
+	AICar dummy_car = AICar(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
+	race.ai_cars.push_back(dummy_car);
+	race.ai_cars[0].speed = 1;
+	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
 	//camera
@@ -147,7 +148,9 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
-	race.dummy_car.draw(mvp, modelID, mvpID);
+	for(AICar& car : race.ai_cars){
+		car.draw(mvp, modelID, mvpID);
+	}
 	race.track.draw(mvp, modelID, mvpID);
 
 	glutSwapBuffers();
