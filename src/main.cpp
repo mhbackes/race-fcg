@@ -109,10 +109,9 @@ void keyboardDown(unsigned char key, int x, int y) {
 	if (key == 'c') {
 		Point np = race.player_car.position.get_center();
 		std::ofstream cp;
-		cp.open(
-				"/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
+		cp.open("resources/etc/checkpoints.txt",
 				std::ios_base::app);
-		cp << np.x << " " << np.y << " " << 6 << std::endl;
+		cp << np.x << " " << np.y << " " << 10 << std::endl;
 		cp.close();
 	}
 }

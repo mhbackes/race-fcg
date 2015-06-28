@@ -49,9 +49,17 @@ bool Race::parse_checkpoints(char *cp_path) {
 	int nPar;
 
 	if (cp_file == NULL) {
-	   std::cout << "Failed to open " << cp_path << endl;
-	   return false;
+		std::cout << "Failed to open " << cp_path << endl;
+		return false;
 	}
+
+	fseek(cp_file, 0, SEEK_END);
+	if (!ftell(cp_file)) {
+		std::cout << "Empty checkpoints file" << endl;
+		return false;
+	}
+
+	fseek(cp_file, 0, SEEK_SET);
 	nPar = fscanf(cp_file,"%f %f %f\n", &x, &y, &radius);
 	while(nPar != EOF) {
 		if (nPar != 3)
