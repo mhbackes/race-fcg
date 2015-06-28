@@ -30,6 +30,10 @@ struct Race {
 	void reset_time();
 	void update();
 
+	void add_checkpoint(Point center, float radius);
+
+	bool parse_checkpoints(char *cp_path);
+
 	Race();
 	virtual ~Race();
 };
