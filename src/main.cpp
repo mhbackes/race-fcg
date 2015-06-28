@@ -60,7 +60,7 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(0, 40), Angle(90), 6.52, 2.6);
+	Rectangle car_pos(Point(-30, -20), Angle(90), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);

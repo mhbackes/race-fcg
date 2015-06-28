@@ -102,7 +102,14 @@ bool Car::intersects(Car& c) {
 
 bool Car::is_on_track() {
 	Track& t = race->track;
-	return t.contains(*this);
+	vector<Point> v = position.get_vertex();
+	if(t.contains(*this)){
+		std::cout << "Car is on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
+		return true;
+	} else {
+		std::cout << "Car is NOT on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
+		return false;
+	}
 }
 
 bool Car::intersects(Circle& r) {
