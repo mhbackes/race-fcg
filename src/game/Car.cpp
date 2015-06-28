@@ -13,8 +13,8 @@
 using namespace std;
 
 
-const float Car::MAX_SPEED = 1;
-const float Car::MIN_SPEED = -0.5;
+const float Car::MAX_SPEED = 1.5;
+const float Car::MIN_SPEED = -0.2;
 const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.2;
 const float Car::MIN_SPEED_OUTSIDE_TRACK = -0.1;
 

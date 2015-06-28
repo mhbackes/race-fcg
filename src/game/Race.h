@@ -13,6 +13,7 @@
 #include "Track.h"
 #include "Checkpoint.h"
 #include "Camera.h"
+#include "Terrain.h"
 #include <vector>
 #include <ctime>
 using std::vector;
@@ -24,6 +25,7 @@ struct Race {
 	Car player_car;
 	vector<AICar> ai_cars;
 	Track track;
+	Terrain terrain;
 	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
 

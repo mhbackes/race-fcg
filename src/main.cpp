@@ -44,11 +44,11 @@ Light gLight;
 Race race;
 
 int init_resources() {
-	glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
+	glClearColor(0.52f, 0.80f, 0.98f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
 	//light
-	gLight.position = glm::vec3(0.0f, 30.0f, -10.0f);
+	gLight.position = glm::vec3(0.0f, 40.0f, 0.0f);
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
@@ -62,7 +62,7 @@ int init_resources() {
 
 	//player car
 	Rectangle car_pos(Point(-30, -20), Angle(90), 6.52, 2.6);
-	race.player_car = Car(&race, car_pos, 0.0001, -0.00001, -0.001, 1);
+	race.player_car = Car(&race, car_pos, 0.001, -0.001, -0.004, 1.2);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
@@ -74,24 +74,17 @@ int init_resources() {
 	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
-	// test checkpoints
-	/*
-	Point check_center0(135, -20);
-	Checkpoint c0(check_center0, 10);
-	Point check_center1(-75, -20);
-	Checkpoint c1(check_center1, 10);
-
-	race.checkpoints.push_back(c0);
-	race.checkpoints.push_back(c1);
-	*/
-
 	//camera
-	//race.camera = Camera(&race.player_car); // camera on player
-	race.camera = Camera(&race.ai_cars[0]); // camera on bot
+	race.camera = Camera(&race.player_car); // camera on player
+//	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
 			"resources/textures/road.bmp", programID);
+
+	//terrain
+	race.terrain.load_model("resources/objects/terrain.obj",
+			"resources/textures/grass.bmp", programID);
 
 	//checkpoints parsing
 	race.parse_checkpoints("resources/etc/checkpoints.txt");
@@ -116,7 +109,8 @@ void keyboardDown(unsigned char key, int x, int y) {
 	if (key == 'c') {
 		Point np = race.player_car.position.get_center();
 		std::ofstream cp;
-		cp.open("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
+		cp.open(
+				"/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
 				std::ios_base::app);
 		cp << np.x << " " << np.y << " " << 6 << std::endl;
 		cp.close();
@@ -172,16 +166,17 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
+	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID);
 	for (AICar& car : race.ai_cars) {
 		car.draw(mvp, modelID, mvpID);
-		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
 	}
 	race.track.draw(mvp, modelID, mvpID);
+	race.terrain.draw(mvp, modelID, mvpID);
 
 	std::cout << "Position: "
-			<< race.ai_cars[0].position.get_center().to_string() << " Check: "
-			<< race.ai_cars[0].checkpoint << " Lap: " << race.ai_cars[0].lap
-			<< std::endl;
+			<< race.player_car.position.get_center().to_string() << " Check: "
+			<< race.player_car.checkpoint << " Lap: " << race.player_car.lap
+			<< " Speed: " << race.player_car.speed << std::endl;
 
 	glutSwapBuffers();
 	glutPostRedisplay();
