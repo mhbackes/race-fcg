@@ -61,7 +61,7 @@ int init_resources() {
 
 	//player car
 	Rectangle car_pos(Point(-30, -20), Angle(90), 6.52, 2.6);
-	race.player_car = Car(&race, car_pos, 0.1, -0.001, -0.01, 1);
+	race.player_car = Car(&race, car_pos, 0.0001, -0.00001, -0.001, 1);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
@@ -79,6 +79,7 @@ int init_resources() {
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
 			"resources/textures/road.bmp", programID);
+
 
 	//race
 	race.reset_time();

@@ -9,6 +9,9 @@
 #include "Race.h"
 #include "../common/texture.hpp"
 #include <iostream>
+#include <fstream>
+using namespace std;
+
 
 const float Car::MAX_SPEED = 1;
 const float Car::MIN_SPEED = -0.5;
@@ -104,10 +107,10 @@ bool Car::is_on_track() {
 	Track& t = race->track;
 	vector<Point> v = position.get_vertex();
 	if(t.contains(*this)){
-		std::cout << "Car is on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
+		//td::cout << "Car is on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
 		return true;
 	} else {
-		std::cout << "Car is NOT on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
+		//std::cout << "Car is NOT on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
 		return false;
 	}
 }
