@@ -12,8 +12,6 @@
 
 struct Race;
 
-//enum Direction{STRAIGHT, LEFT, RIGHT};
-
 struct AICar: public Car {
 	AICar();
 	AICar(Race* race, Rectangle& pos, float ga, float ia, float ba, Angle ta);
@@ -23,7 +21,7 @@ struct AICar: public Car {
 	void update();
 
 
-	Direction direction(Point& destination);
+	float direction(Point& destination);
 	virtual ~AICar();
 };
 

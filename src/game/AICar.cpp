@@ -28,7 +28,7 @@ bool AICar::collides(Rectangle& new_pos) {
 	return race->player_car.intersects(new_pos);
 }
 
-Direction AICar::direction(Point& destination) {
+float AICar::direction(Point& destination) {
 	Point& center = position.get_center();
 	Angle angle = position.get_angle() + Angle(180);
 	Point ahead;
@@ -36,18 +36,7 @@ Direction AICar::direction(Point& destination) {
 	ahead.y = angle.sin() + center.y;
 	float cross_product = (ahead.x - center.x) * (destination.y - center.y)
 			- (ahead.y - center.y) * (destination.x - center.x);
-	std::cout << cross_product;
-	if (cross_product > 1) {
-		std::cout << " Right" << std::endl;
-		return RIGHT;
-	}
-	if (cross_product < -1) {
-		std::cout << " Left" << std::endl;
-		return LEFT;
-	}
-	std::cout << " Straight" << std::endl;
-	return STRAIGHT;
-
+	return cross_product;
 }
 
 void AICar::update() {
@@ -56,15 +45,29 @@ void AICar::update() {
 }
 
 void AICar::inputs() {
-	Direction d = direction(race->checkpoints[checkpoint].center);
-	switch (d) {
-	case LEFT:
+	float d = direction(race->checkpoints[checkpoint].center);
+	std::cout << "Speed: " << speed << "\tDir: " << d << "  ";
+	if (d < -1) {
+		std::cout << "\tLEFT    ";
 		turn_left();
-		break;
-	case RIGHT:
+	} else if (d > 1) {
+		std::cout << "\tRIGHT   ";
 		turn_right();
+	} else
+		std::cout << "\tSTRAIGHT";
+	if (d > -2 && d < 2) {
+		std::cout << "\tOK_SPEED";
+		gas();
+	} else if (speed > 0 && (d <= -3 || d >= 3)) {
+		std::cout << "\tBREAK";
+		brake();
+	} else if (speed <= 0){
+		std::cout << "\tTOO_SLOW";
+		gas();
+	} else {
+		std::cout << "\tNO_GAS";
 	}
-	gas();
+	std::cout << std::endl;
 }
 
 AICar::~AICar() {

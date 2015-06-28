@@ -16,7 +16,7 @@ using std::cout;
 using std::endl;
 
 
-const clock_t Race::clocks_per_frame = 0;
+const clock_t Race::clocks_per_frame = CLOCKS_PER_SEC / 10000;
 
 Race::Race() {
 	// TODO Auto-generated constructor stub

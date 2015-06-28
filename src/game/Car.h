@@ -19,8 +19,6 @@
 
 struct Race;
 
-enum Direction{STRAIGHT, LEFT, RIGHT};
-
 struct Car {
 	Race* race;
 	Rectangle position;
