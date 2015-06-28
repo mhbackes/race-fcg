@@ -52,8 +52,8 @@ int init_resources() {
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
-	programID = LoadShaders("/home/prlanzarin/github/race-fcg/resources/shader/vertex.shader",
-			"/home/prlanzarin/github/race-fcg/resources/shader/fragment.shader");
+	programID = LoadShaders("resources/shader/vertex.shader",
+			"resources/shader/fragment.shader");
 	glUseProgram(programID);
 	mvpID = glGetUniformLocation(programID, "MVP");
 	modelID = glGetUniformLocation(programID, "model");
@@ -63,27 +63,27 @@ int init_resources() {
 	//player car
 	Rectangle car_pos(Point(-30, -20), Angle(90), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.0001, -0.00001, -0.001, 1);
-	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
-			"/home/prlanzarin/github/race-fcg/resources/textures/camaro.bmp", programID);
+	race.player_car.load_model("resources/objects/camaro.obj",
+			"resources/textures/camaro.bmp", programID);
 
 	//ia car
 
 	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
 	race.ai_cars.push_back(dummy_car);
-	race.ai_cars[0].load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
-			"/home/prlanzarin/github/race-fcg/resources/textures/camaro.bmp", programID);
+	race.ai_cars[0].load_model("resources/objects/camaro.obj",
+			"resources/textures/camaro.bmp", programID);
 
 	//camera
 	//race.camera = Camera(&race.player_car); // camera on player
 	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
-	race.track.load_model("/home/prlanzarin/github/race-fcg/resources/objects/dijon.obj",
-			"/home/prlanzarin/github/race-fcg/resources/textures/road.bmp", programID);
+	race.track.load_model("resources/objects/dijon.obj",
+			"resources/textures/road.bmp", programID);
 
 	// checkpoints
-	if(race.parse_checkpoints("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt")
+	if(race.parse_checkpoints("resources/etc/checkpoints.txt")
 			== false) {
 		Point check_center0(135, -20);
 		Checkpoint c0(check_center0, 10);
@@ -115,7 +115,7 @@ void keyboardDown(unsigned char key, int x, int y) {
 	if (key == 'c') {
 		Point np = race.player_car.position.get_center();
 		std::ofstream cp;
-		cp.open("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
+		cp.open("resources/etc/checkpoints.txt",
 				std::ios_base::app);
 		cp << np.x << " " << np.y << " " << 10 << std::endl;
 		cp.close();
