@@ -29,7 +29,7 @@ Race::Race() {
 void Race::update() {
 	player_car.update();
 	for(AICar& car : ai_cars){
-		//car.update();
+		car.update();
 	}
 	curr_time = clock();
 }

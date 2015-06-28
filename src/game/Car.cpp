@@ -28,6 +28,8 @@ Car::Car() {
 	this->turn_angle = 10;
 	this->turn_l = false;
 	this->turn_r = false;
+	lap = 0;
+	checkpoint = 0;
 }
 
 void Car::gas() {
@@ -65,6 +67,8 @@ Car::Car(Race *r, Rectangle& pos, float ga, float ia, float ba, Angle ta) {
 	brake_acceleration = ba;
 	turn_angle = ta;
 	speed = 0;
+	lap = 0;
+	checkpoint = 0;
 	this->turn_l = false;
 	this->turn_r = false;
 }
@@ -87,12 +91,19 @@ void Car::update() {
 	Rectangle new_pos = position;
 	new_pos.move(dx, dy);
 	turn(new_pos);
-	if(collides(new_pos)){
+	if (collides(new_pos)) {
 		speed = 0;
 		return;
 	}
 	position = new_pos;
-	//TODO check collision with checkpoints
+
+	if(intersects(race->checkpoints[checkpoint])){
+		checkpoint++;
+	}
+	if(checkpoint >= race->checkpoints.size()){
+		checkpoint = 0;
+		lap++;
+	}
 }
 
 bool Car::intersects(Rectangle& r) {
@@ -106,13 +117,7 @@ bool Car::intersects(Car& c) {
 bool Car::is_on_track() {
 	Track& t = race->track;
 	vector<Point> v = position.get_vertex();
-	if(t.contains(*this)){
-		//td::cout << "Car is on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
-		return true;
-	} else {
-		//std::cout << "Car is NOT on track " << v[0].to_string() << " " << v[1].to_string() << " " << v[2].to_string() << " " << v[3].to_string() << std::endl;
-		return false;
-	}
+	return t.contains(*this);
 }
 
 bool Car::intersects(Circle& r) {
@@ -231,8 +236,9 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 
 	vector<Point> v = position.get_vertex();
 
-	glColor3f(1.0, 1.0, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
 	glBegin(GL_QUAD_STRIP);
+	glNormal3f(0, 1, 0);
 	glVertex3f(v[0].x, 0.2, v[0].y);
 	glVertex3f(v[1].x, 0.2, v[1].y);
 	glVertex3f(v[2].x, 0.2, v[2].y);
@@ -244,8 +250,8 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 }
 
 bool Car::collides(Rectangle& pos) {
-	for(AICar& car : race->ai_cars){
-		if(this != &car && car.intersects(pos))
+	for (AICar& car : race->ai_cars) {
+		if (this != &car && car.intersects(pos))
 			return true;
 	}
 	return false;

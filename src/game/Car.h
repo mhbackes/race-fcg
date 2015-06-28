@@ -13,10 +13,13 @@
 #include "glm/glm.hpp"
 #include "GL/glew.h"
 #include "GL/freeglut.h"
+#include <iostream>
 
 #include "../common/objloader.h"
 
 struct Race;
+
+enum Direction{STRAIGHT, LEFT, RIGHT};
 
 struct Car {
 	Race* race;
@@ -26,6 +29,9 @@ struct Car {
 	float idle_acceleration;
 	float brake_acceleration;
 	Angle turn_angle;
+
+	int checkpoint;
+	int lap;
 
 	GLuint vertexID;
 	GLuint vertexBuffer;
@@ -54,7 +60,7 @@ struct Car {
 	void turn_left();
 	void turn_right();
 
-	void update();
+	virtual void update();
 	void turn(Rectangle& pos);
 
 	bool is_on_track();

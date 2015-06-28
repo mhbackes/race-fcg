@@ -20,6 +20,7 @@ Triangle::Triangle(Point& p0, Point& p1, Point& p2) {
 	this->p2 = p2;
 }
 
+//Rudinei's error based inside track detection algorithm TM
 bool Triangle::contains(Point& p) {
 	float area_tri = area(p0, p1, p2);
 	float a0 = area(p, p0, p1);

@@ -11,10 +11,10 @@
 #include "Point.h"
 #include "Boundingbox.h"
 
-class Circle {
+struct Circle {
 	Point center;
 	float radius;
-public:
+
 	Circle();
 	Circle(Point c, float r);
 	Point get_center();

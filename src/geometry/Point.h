@@ -8,17 +8,20 @@
 #ifndef GLM_POINT_H_
 #define GLM_POINT_H_
 
+#include "Angle.h"
 #include <string>
 using std::string;
 
-class Point {
-public:
+struct Point {
+
 	float x, y;
 
 	Point();
 	Point(float x, float y);
 	void move(float dx, float dy);
 	float distance(Point& p);
+
+	Angle angle(Point& a, Point& b);
 
 	friend Point operator+(const Point& p, const Point& q) {
 		return Point(p.x + q.x, p.y + q.y);
