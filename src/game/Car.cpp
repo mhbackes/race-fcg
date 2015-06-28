@@ -233,8 +233,9 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 
 	vector<Point> v = position.get_vertex();
 
-	glColor3f(1.0, 1.0, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
 	glBegin(GL_QUAD_STRIP);
+	glNormal3f(0, 1, 0);
 	glVertex3f(v[0].x, 0.2, v[0].y);
 	glVertex3f(v[1].x, 0.2, v[1].y);
 	glVertex3f(v[2].x, 0.2, v[2].y);

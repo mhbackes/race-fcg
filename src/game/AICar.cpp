@@ -37,16 +37,17 @@ Direction AICar::direction(Point& destination) {
 	float cross_product = (ahead.x - center.x) * (destination.y - center.y)
 			- (ahead.y - center.y) * (destination.x - center.x);
 	std::cout << cross_product;
-	if (cross_product == 0) {
-		std::cout << " Straight" << std::endl;
-		return STRAIGHT;
+	if (cross_product > 1) {
+		std::cout << " Right" << std::endl;
+		return RIGHT;
 	}
-	if (cross_product < 0) {
+	if (cross_product < -1) {
 		std::cout << " Left" << std::endl;
 		return LEFT;
 	}
-	std::cout << " Right" << std::endl;
-	return RIGHT;
+	std::cout << " Straight" << std::endl;
+	return STRAIGHT;
+
 }
 
 void AICar::update() {
@@ -56,7 +57,7 @@ void AICar::update() {
 
 void AICar::inputs() {
 	Direction d = direction(race->checkpoints[checkpoint].center);
-	switch(d){
+	switch (d) {
 	case LEFT:
 		turn_left();
 		break;

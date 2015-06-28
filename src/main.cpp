@@ -159,6 +159,7 @@ void onDisplay() {
 	race.player_car.draw(mvp, modelID, mvpID);
 	for (AICar& car : race.ai_cars) {
 		car.draw(mvp, modelID, mvpID);
+		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
 	}
 	race.track.draw(mvp, modelID, mvpID);
 

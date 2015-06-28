@@ -9,10 +9,14 @@
 #define GAME_CHECKPOINT_H_
 
 #include "../geometry/Circle.h"
+#include "glm/glm.hpp"
+#include "GL/glew.h"
+#include "GL/freeglut.h"
 
-struct Checkpoint : public Circle{
+struct Checkpoint: public Circle {
 	Checkpoint();
 	Checkpoint(Point& center, float radius);
+	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
 	virtual ~Checkpoint();
 };
 
