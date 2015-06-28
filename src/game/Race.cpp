@@ -56,6 +56,7 @@ bool Race::parse_checkpoints(char *cp_path) {
 	while(nPar != EOF) {
 		if (nPar != 3)
 			return false;
+
 		this->add_checkpoint(Point(x, y), radius);
 		nPar = fscanf(cp_file,"%f %f %f\n", &x, &y, &radius);
 	}

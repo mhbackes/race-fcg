@@ -27,6 +27,7 @@
 #include "common/shader.hpp"
 
 #include <iostream>
+#include <fstream>
 
 GLuint programID;
 GLuint mvpID;
@@ -66,13 +67,15 @@ int init_resources() {
 			"resources/textures/camaro.bmp", programID);
 
 	//ia car
+
 	Rectangle dummy_car_pos(Point(0, -60), Angle(-90), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.1, -0.001, -0.01, 1);
 	race.ai_cars.push_back(dummy_car);
 	race.ai_cars[0].load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
-	//checkpoint
+	// test checkpoints
+	/*
 	Point check_center0(135, -20);
 	Checkpoint c0(check_center0, 10);
 	Point check_center1(-75, -20);
@@ -80,15 +83,18 @@ int init_resources() {
 
 	race.checkpoints.push_back(c0);
 	race.checkpoints.push_back(c1);
+	*/
 
 	//camera
-//	race.camera = Camera(&race.player_car); // camera on player
+	//race.camera = Camera(&race.player_car); // camera on player
 	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
 			"resources/textures/road.bmp", programID);
 
+	//checkpoints parsing
+	race.parse_checkpoints("resources/etc/checkpoints.txt");
 
 	//race
 	race.reset_time();
@@ -106,8 +112,16 @@ void keyboardDown(unsigned char key, int x, int y) {
 	} else if (key == 'V') {
 		race.camera.toggle_rear();
 	}
-}
 
+	if (key == 'c') {
+		Point np = race.player_car.position.get_center();
+		std::ofstream cp;
+		cp.open("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt",
+				std::ios_base::app);
+		cp << np.x << " " << np.y << " " << 6 << std::endl;
+		cp.close();
+	}
+}
 void keyboardUp(unsigned char key, int x, int y) {
 
 	keystates[key] = false;
