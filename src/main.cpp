@@ -64,16 +64,18 @@ int init_resources() {
 	Rectangle car_pos(Point(-50, -20), Angle(180), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.00095, -0.001, -0.009, 1.2);
 	race.player_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro.bmp", programID);
+			"resources/textures/camaro-pink.bmp", programID);
 
 	//ia car
 
 	Rectangle dummy_car_pos(Point(-30, -20), Angle(180), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.001, -0.001, -0.004, 2);
 	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro.bmp", programID);
+			"resources/textures/camaro-green.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(-40, -25);
+	dummy_car.load_model("resources/objects/camaro.obj",
+			"resources/textures/camaro-blue.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 
 	//camera
@@ -138,7 +140,8 @@ void idle() {
 	if (race.paused)
 		return;
 
-	std::cout << "Lap: " << race.player_car.lap << " Check: " << race.player_car.checkpoint << std::endl;
+	std::cout << "Lap: " << race.player_car.lap << " Check: "
+			<< race.player_car.checkpoint << std::endl;
 	if (race.finished()) {
 		race.paused = true;
 		if (race.player_car.lap == race.max_lap)
