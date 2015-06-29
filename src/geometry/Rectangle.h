@@ -16,7 +16,7 @@
 
 using std::vector;
 
-class Rectangle {
+struct Rectangle {
 	Point center;
 	Angle angle;
 	float height;
@@ -33,11 +33,7 @@ public:
 	bool intersects(Rectangle& r);
 	bool intersects(Circle& c); // não é 100% precisa, mas é suficiente
 	bool contains(Point& p);
-	Point& get_center();
-	Angle& get_angle();
-	float get_height();
-	float get_base();
-	vector<Point> get_vertex();
+	vector<Point> vertex();
 	virtual ~Rectangle();
 };
 

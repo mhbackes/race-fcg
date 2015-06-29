@@ -27,7 +27,7 @@ bool Triangle::contains(Point& p) {
 	float a1 = area(p, p1, p2);
 	float a2 = area(p, p2, p0);
 	float area_sum = a0 + a1 + a2;
-	return area_sum <= area_tri + 8192 * FLT_EPSILON;
+	return area_sum <= area_tri + 16384 * FLT_EPSILON;
 }
 
 float Triangle::area(Point& p0, Point& p1, Point& p2) {

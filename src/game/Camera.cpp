@@ -46,8 +46,8 @@ glm::mat4 Camera::mvp() {
 
 glm::vec3 Camera::eye_back() {
 	glm::vec3 eye;
-	Angle car_to_eye_angle = car->position.get_angle();
-	Point car_center = car->position.get_center();
+	Angle car_to_eye_angle = car->position.angle;
+	Point car_center = car->position.center;
 	eye.x = car_to_eye_angle.cos() * 6 + car_center.x;
 	eye.y = 3;
 	eye.z = car_to_eye_angle.sin() * 6 + car_center.y;
@@ -56,8 +56,8 @@ glm::vec3 Camera::eye_back() {
 
 glm::vec3 Camera::car_front() {
 	glm::vec3 car_front;
-	Angle car_to_eye_angle = car->position.get_angle() - Angle(180);
-	Point car_center = car->position.get_center();
+	Angle car_to_eye_angle = car->position.angle - Angle(180);
+	Point car_center = car->position.center;
 	car_front.x = car_to_eye_angle.cos() * 7 + car_center.x;
 	car_front.y = 0;
 	car_front.z = car_to_eye_angle.sin() * 7 + car_center.y;
@@ -66,7 +66,7 @@ glm::vec3 Camera::car_front() {
 
 glm::vec3 Camera::car_center() {
 	glm::vec3 car_center;
-	Point car_center_pos = car->position.get_center();
+	Point car_center_pos = car->position.center;
 	car_center.x = car_center_pos.x + 0.1;
 	car_center.y = 0;
 	car_center.z = car_center_pos.y;
@@ -75,17 +75,17 @@ glm::vec3 Camera::car_center() {
 
 glm::vec3 Camera::eye_eagle() {
 	glm::vec3 eagle_eye;
-	Point car_center_pos = car->position.get_center();
+	Point car_center_pos = car->position.center;
 	eagle_eye.x = car_center_pos.x;
-	eagle_eye.y = 30;
+	eagle_eye.y = 60;
 	eagle_eye.z = car_center_pos.y;
 	return eagle_eye;
 }
 
 glm::vec3 Camera::eye_front() {
 	glm::vec3 eye;
-	Angle car_to_eye_angle = car->position.get_angle() - Angle(180);
-	Point car_center = car->position.get_center();
+	Angle car_to_eye_angle = car->position.angle - Angle(180);
+	Point car_center = car->position.center;
 	eye.x = car_to_eye_angle.cos() * 6 + car_center.x;
 	eye.y = 3;
 	eye.z = car_to_eye_angle.sin() * 6 + car_center.y;
@@ -94,8 +94,8 @@ glm::vec3 Camera::eye_front() {
 
 glm::vec3 Camera::car_back() {
 	glm::vec3 car_front;
-	Angle car_to_eye_angle = car->position.get_angle();
-	Point car_center = car->position.get_center();
+	Angle car_to_eye_angle = car->position.angle;
+	Point car_center = car->position.center;
 	car_front.x = car_to_eye_angle.cos() * 7 + car_center.x;
 	car_front.y = 0;
 	car_front.z = car_to_eye_angle.sin() * 7 + car_center.y;

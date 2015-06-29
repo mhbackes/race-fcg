@@ -59,6 +59,7 @@ struct Car {
 	void turn_right();
 
 	virtual void update();
+	virtual void update_checkpoint();
 	void turn(Rectangle& pos);
 
 	bool is_on_track();

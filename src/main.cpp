@@ -48,7 +48,7 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	//light
-	gLight.position = glm::vec3(0.0f, 40.0f, 0.0f);
+	gLight.position = glm::vec3(0.0f, 20.0f, 0.0f);
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//program
@@ -61,22 +61,25 @@ int init_resources() {
 	glActiveTexture(GL_TEXTURE0);
 
 	//player car
-	Rectangle car_pos(Point(-30, -20), Angle(90), 6.52, 2.6);
-	race.player_car = Car(&race, car_pos, 0.001, -0.001, -0.004, 1.2);
+	Rectangle car_pos(Point(-50, -20), Angle(180), 6.52, 2.6);
+	race.player_car = Car(&race, car_pos, 0.00095, -0.001, -0.009, 1.2);
 	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
 
 	//ia car
 
-	Rectangle dummy_car_pos(Point(-20, -20), Angle(-90), 6.52, 2.6);
+	Rectangle dummy_car_pos(Point(-30, -20), Angle(180), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.001, -0.001, -0.004, 2);
-	race.ai_cars.push_back(dummy_car);
-	race.ai_cars[0].load_model("resources/objects/camaro.obj",
+	dummy_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/camaro.bmp", programID);
+	race.ai_cars.push_back(dummy_car);
+	dummy_car.position.center = Point(-40, -25);
+	race.ai_cars.push_back(dummy_car);
+
 
 	//camera
-//	race.camera = Camera(&race.player_car); // camera on player
-	race.camera = Camera(&race.ai_cars[0]); // camera on bot
+	race.camera = Camera(&race.player_car); // camera on player
+//	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
@@ -87,7 +90,8 @@ int init_resources() {
 			"resources/textures/grass.bmp", programID);
 
 	//checkpoints parsing
-	race.parse_checkpoints("resources/etc/checkpoints.txt");
+	Checkpoint::load_model("resources/objects/flag.obj", "resources/textures/flag.bmp", programID);
+	race.parse_checkpoints("resources/etc/checkpoints4.txt");
 
 	//race
 	race.reset_time();
@@ -107,7 +111,7 @@ void keyboardDown(unsigned char key, int x, int y) {
 	}
 
 	if (key == 'c') {
-		Point np = race.player_car.position.get_center();
+		Point np = race.player_car.position.center;
 		std::ofstream cp;
 		cp.open("resources/etc/checkpoints.txt", std::ios_base::app);
 		cp << np.x << " " << np.y << " " << 5 << std::endl;
@@ -164,16 +168,16 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID);
-//	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID);
-//	std::cout << "Position: "
-//			<< race.player_car.position.get_center().to_string() << " Check: "
-//			<< race.player_car.checkpoint << " Lap: " << race.player_car.lap
-//			<< " Speed: " << race.player_car.speed << std::endl;
+	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID);
+	std::cout << "Position: "
+			<< race.player_car.position.center.to_string() << " Check: "
+			<< race.player_car.checkpoint << " Lap: " << race.player_car.lap
+			<< " Speed: " << race.player_car.speed << std::endl;
 	for (AICar& car : race.ai_cars) {
 		car.draw(mvp, modelID, mvpID);
-		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
+//		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
 //		std::cout << "Position: "
-//				<< car.position.get_center().to_string()
+//				<< car.position.center.to_string()
 //				<< " Check: " << car.checkpoint << " Lap: "
 //				<< car.lap << " Speed: " << car.speed
 //				<< std::endl;

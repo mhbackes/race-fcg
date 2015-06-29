@@ -19,6 +19,7 @@ struct AICar: public Car {
 
 	void inputs();
 	void update();
+	void update_checkpoint();
 
 
 	float direction(Point& destination);

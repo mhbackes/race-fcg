@@ -12,7 +12,6 @@
 #include <fstream>
 using namespace std;
 
-
 const float Car::MAX_SPEED = 1;
 const float Car::MIN_SPEED = -0.2;
 const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.2;
@@ -86,21 +85,24 @@ void Car::turn_right() {
 void Car::update() {
 	if (!is_on_track())
 		limit_speed(MIN_SPEED_OUTSIDE_TRACK, MAX_SPEED_OUTSIDE_TRACK);
-	float dx = -speed * position.get_angle().cos();
-	float dy = -speed * position.get_angle().sin();
+	float dx = -speed * position.angle.cos();
+	float dy = -speed * position.angle.sin();
 	Rectangle new_pos = position;
 	new_pos.move(dx, dy);
 	turn(new_pos);
 	if (collides(new_pos)) {
-		speed = 0;
+		speed *= 0.9;
 		return;
 	}
 	position = new_pos;
+	update_checkpoint();
+}
 
-	if(intersects(race->checkpoints[checkpoint])){
-		checkpoint++;
+void Car::update_checkpoint() {
+	if (intersects(race->checkpoints[checkpoint])) {
+		checkpoint+=15;
 	}
-	if(checkpoint >= race->checkpoints.size()){
+	if (checkpoint >= race->checkpoints.size()) {
 		checkpoint = 0;
 		lap++;
 	}
@@ -116,7 +118,7 @@ bool Car::intersects(Car& c) {
 
 bool Car::is_on_track() {
 	Track& t = race->track;
-	vector<Point> v = position.get_vertex();
+	vector<Point> v = position.vertex();
 	return t.contains(*this);
 }
 
@@ -185,12 +187,12 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 }
 
 void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
-	Point& car_center = position.get_center();
+	Point& car_center = position.center;
 	glm::mat4 onemat = glm::mat4(1.0f);
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 car_pos = glm::vec3(car_center.x, 0, car_center.y);
 	glm::mat4 rotation = glm::rotate(onemat,
-			-(position.get_angle() + Angle(90)).get_degree(), up);
+			-(position.angle + Angle(90)).get_degree(), up);
 	glm::mat4 size = glm::mat4(1);
 	glm::mat4 translation = glm::translate(onemat, car_pos);
 	glm::mat4 model = translation * size * rotation;
@@ -234,7 +236,7 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 
-	vector<Point> v = position.get_vertex();
+	vector<Point> v = position.vertex();
 
 	glColor3f(0.0, 0.0, 1.0);
 	glBegin(GL_QUAD_STRIP);
