@@ -28,9 +28,12 @@ struct Race {
 	Terrain terrain;
 	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
+	bool paused;
+	int max_lap;
 
 	void reset_time();
 	void update();
+	bool finished();
 
 	void add_checkpoint(Point center, float radius);
 

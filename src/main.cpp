@@ -76,7 +76,6 @@ int init_resources() {
 	dummy_car.position.center = Point(-40, -25);
 	race.ai_cars.push_back(dummy_car);
 
-
 	//camera
 	race.camera = Camera(&race.player_car); // camera on player
 //	race.camera = Camera(&race.ai_cars[0]); // camera on bot
@@ -90,11 +89,14 @@ int init_resources() {
 			"resources/textures/grass.bmp", programID);
 
 	//checkpoints parsing
-	Checkpoint::load_model("resources/objects/flag.obj", "resources/textures/flag.bmp", programID);
+	Checkpoint::load_model("resources/objects/flag.obj",
+			"resources/textures/flag.bmp", programID);
 	race.parse_checkpoints("resources/etc/checkpoints4.txt");
 
 	//race
 	race.reset_time();
+	race.max_lap = 3;
+	race.paused = false;
 
 	return programID;
 
@@ -103,6 +105,9 @@ int init_resources() {
 void keyboardDown(unsigned char key, int x, int y) {
 
 	keystates[key] = true;
+
+	if (keystates['p'])
+		race.paused = !race.paused;
 
 	if (key == 'v') {
 		race.camera.toggle_eagle();
@@ -129,6 +134,19 @@ void idle() {
 	clock_t curr_time = clock();
 	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
 		return;
+
+	if (race.paused)
+		return;
+
+	std::cout << "Lap: " << race.player_car.lap << " Check: " << race.player_car.checkpoint << std::endl;
+	if (race.finished()) {
+		race.paused = true;
+		if (race.player_car.lap == race.max_lap)
+			std::cout << "You win!" << std::endl;
+		else
+			std::cout << "You lose!" << std::endl;
+		return;
+	}
 
 	if (keystates['s'])
 		race.player_car.brake();
@@ -169,10 +187,10 @@ void onDisplay() {
 
 	race.player_car.draw(mvp, modelID, mvpID);
 	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID);
-	std::cout << "Position: "
-			<< race.player_car.position.center.to_string() << " Check: "
-			<< race.player_car.checkpoint << " Lap: " << race.player_car.lap
-			<< " Speed: " << race.player_car.speed << std::endl;
+//	std::cout << "Position: " << race.player_car.position.center.to_string()
+//			<< " Check: " << race.player_car.checkpoint << " Lap: "
+//			<< race.player_car.lap << " Speed: " << race.player_car.speed
+//			<< std::endl;
 	for (AICar& car : race.ai_cars) {
 		car.draw(mvp, modelID, mvpID);
 //		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);

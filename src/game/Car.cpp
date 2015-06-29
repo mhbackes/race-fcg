@@ -32,7 +32,10 @@ Car::Car() {
 }
 
 void Car::gas() {
-	speed += gas_acceleration;
+	if (speed >= 0)
+		speed += gas_acceleration;
+	else
+		speed -= brake_acceleration;
 	limit_speed(MIN_SPEED, MAX_SPEED);
 }
 
@@ -47,7 +50,10 @@ void Car::idle() {
 }
 
 void Car::brake() {
-	speed += brake_acceleration;
+	if (speed > 0)
+		speed += brake_acceleration;
+	else
+		speed -= gas_acceleration;
 	limit_speed(MIN_SPEED, MAX_SPEED);
 }
 
@@ -211,7 +217,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glBindVertexArray(vertexBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	draw_position(mvp, modelID, mvpID);
+//	draw_position(mvp, modelID, mvpID);
 }
 
 void Car::turn(Rectangle& pos) {

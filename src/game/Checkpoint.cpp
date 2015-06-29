@@ -114,7 +114,6 @@ void Checkpoint::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 //	glEnd();
 	glm::mat4 onemat = glm::mat4(1.0f);
 	glm::vec3 up = glm::vec3(0, 1, 0);
-	std::cout << center.to_string() << std::endl;
 	glm::vec3 check_pos = glm::vec3(center.x, 0, center.y);
 	glm::mat4 rotation = glm::mat4(1);
 	glm::mat4 size = glm::mat4(1);

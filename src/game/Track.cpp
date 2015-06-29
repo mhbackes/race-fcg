@@ -94,7 +94,7 @@ bool Track::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 		Point p0(vertices[i].x, vertices[i].z);
 		Point p1(vertices[i + 1].x, vertices[i + 1].z);
 		Point p2(vertices[i + 2].x, vertices[i + 2].z);
-		std::cout << p0.to_string() << " " << p1.to_string() << " " << p2.to_string() << std::endl;
+//		std::cout << p0.to_string() << " " << p1.to_string() << " " << p2.to_string() << std::endl;
 		track_parts.push_back(Triangle(p0, p1, p2));
 	}
 

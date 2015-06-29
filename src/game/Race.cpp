@@ -70,3 +70,13 @@ bool Race::parse_checkpoints(char *cp_path) {
 
 	return true;
 }
+
+bool Race::finished() {
+	if(player_car.lap == max_lap)
+		return true;
+	for(Car& car : ai_cars){
+		if(car.lap == max_lap)
+			return true;
+	}
+	return false;
+}
