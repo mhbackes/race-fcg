@@ -155,7 +155,7 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 	float max_x = 0;
 	float max_y = 0;
 
-	for (int i = 0; i < vertices.size(); i++) {
+	for (unsigned i = 0; i < vertices.size(); i++) {
 		vertex_data[i * 8] = vertices[i][0];
 		vertex_data[(i * 8) + 1] = vertices[i][1];
 		vertex_data[(i * 8) + 2] = vertices[i][2];
