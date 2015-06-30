@@ -38,9 +38,12 @@ void main() {
     vec4 surfaceColor = texture(tex, fragTexCoord);
 
     vec3 surfaceToView = normalize(camera_position - fragPosition);
-    vec3 reflection = normalize(reflect(surfaceToLight, normal));
-    float specular_brightness = max(0, dot(reflection, surfaceToView));
+    vec3 reflection = -normalize(reflect(surfaceToLight, normal));
+    float specular_brightness = dot(reflection, surfaceToView);
 	specular_brightness = clamp(specular_brightness, 0, 1);
+	if(brightness <= 0){
+		specular_brightness = 0.0;
+	}
 	
     vec3 diffuse_shading = brightness * light_diffuse * surfaceColor.rgb;
 

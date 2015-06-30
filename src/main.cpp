@@ -64,8 +64,8 @@ int init_resources() {
 
 	//player car
 	Rectangle car_pos(Point(30, -24.5), Angle(180), 6.52, 2.6);
-	race.player_car = Car(&race, car_pos, 0.0015, -0.001, -0.009, 1.2);
-	race.player_car.load_model("resources/objects/camaro.obj",
+	race.player_car = Car(&race, car_pos, 0.001, -0.001, -0.009, 1.2);
+	race.player_car.load_model("resources/objects/tank.obj",
 			"resources/textures/cammo.bmp", programID);
 
 	//ia car
@@ -107,7 +107,7 @@ int init_resources() {
 
 	//checkpoints parsing
 	Checkpoint::load_model("resources/objects/flag.obj",
-			"resources/textures/flag.bmp", programID);
+			"resources/textures/green.bmp", programID);
 	race.parse_checkpoints("resources/etc/checkpoints4.txt");
 
 	//race

@@ -211,6 +211,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 	glm::mat4 MVP = mvp * model;
 
 	//iluminacao
+
 	glUniform1f(glGetUniformLocation(programID, "material_shininess"), 10000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
@@ -279,7 +280,7 @@ bool Car::collides(Rectangle& pos) {
 void Car::collision_speed(Car& car) {
 	Angle diff_angle = position.angle - car.position.angle;
 	float diff = diff_angle.get_degree();
-	if (diff < 60 || diff > 300) { //parallel elastic collision
+	if (diff < 60 || diff > 300) { //parallel semi-inelastic collision
 		float new_speed = (speed + car.speed) / 2;
 		speed = new_speed * 0.95;
 		car.speed = new_speed * 1.05;

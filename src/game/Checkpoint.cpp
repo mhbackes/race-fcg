@@ -107,7 +107,7 @@ void Checkpoint::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID,
 
 	// INTENSIDADE da iluminacao ESPECULAR
 	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-				10000);
+				50);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
