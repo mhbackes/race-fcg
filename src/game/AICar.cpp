@@ -45,39 +45,39 @@ void AICar::update() {
 }
 
 void AICar::inputs() {
-float d = direction(race->checkpoints[checkpoint].center);
+	float d = direction(race->checkpoints[checkpoint].center);
 //std::cout << "Speed: " << speed << "\tCheck: " << checkpoint;
-if (d < -0.5) {
+	if (d < -0.5) {
 //	std::cout << "\tLEFT    ";
-	turn_left();
-} else if (d > 0.5) {
+		turn_left();
+	} else if (d > 0.5) {
 //	std::cout << "\tRIGHT   ";
-	turn_right();
-} //else
+		turn_right();
+	} //else
 //	std::cout << "\tSTRAIGHT";
-if (d > -0.5 && d < 0.5) {
-//	std::cout << "\tOK_SPEED";
-	gas();
-} else if (speed > 0 && (d < -1.45 || d > 1.45)) {
-//	std::cout << "\tBREAK   ";
-	brake();
-} else if (speed <= 0) {
+	if (speed <= 0.2) {
 //	std::cout << "\tTOO_SLOW";
-	gas();
-}//else {
+		gas();
+	} else if (d > -0.5 && d < 0.5) {
+//	std::cout << "\tOK_SPEED";
+		gas();
+	} else if (speed > 0 && (d < -1.45 || d > 1.45)) {
+//	std::cout << "\tBREAK   ";
+		brake();
+	} //else {
 //	std::cout << "\tNO_GAS  ";
 //}
 //std::cout << "\tDir: " << d << std::endl;
 }
 
 void AICar::update_checkpoint() {
-if (intersects(race->checkpoints[checkpoint])) {
-	checkpoint++;
-}
-if (checkpoint >= race->checkpoints.size()) {
-	checkpoint = 0;
-	lap++;
-}
+	if (intersects(race->checkpoints[checkpoint])) {
+		checkpoint++;
+	}
+	if (checkpoint >= race->checkpoints.size()) {
+		checkpoint = 0;
+		lap++;
+	}
 }
 
 AICar::~AICar() {
