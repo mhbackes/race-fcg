@@ -15,7 +15,7 @@
 using std::cout;
 using std::endl;
 
-const float Race::milisec_per_frame = 1000.0 / 60.0;
+const clock_t Race::clocks_per_frame = CLOCKS_PER_SEC / 10000;
 
 Race::Race() {
 	// TODO Auto-generated constructor stub
@@ -26,7 +26,7 @@ void Race::update() {
 		car.update();
 	}
 	player_car.update();
-	curr_time = glutGet(GLUT_ELAPSED_TIME);
+	curr_time = clock();
 }
 
 Race::~Race() {
@@ -34,7 +34,7 @@ Race::~Race() {
 }
 
 void Race::reset_time() {
-	start_time = curr_time = glutGet(GLUT_ELAPSED_TIME);
+	start_time = curr_time = clock();
 }
 
 void Race::add_checkpoint(Point center, float radius) {

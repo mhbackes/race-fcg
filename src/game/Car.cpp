@@ -224,7 +224,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glBindVertexArray(vertexBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-//	draw_position(mvp, modelID, mvpID);
+	draw_position(mvp, modelID, mvpID);
 }
 
 void Car::turn(Rectangle& pos) {

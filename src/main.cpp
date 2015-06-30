@@ -148,38 +148,41 @@ void keyboardUp(unsigned char key, int x, int y) {
 
 }
 
-int frames;
+float roty = 180;
 void idle() {
-	glutTimerFunc(15, (void (*)(int)) idle, 0);
-	GLint curr_time = glutGet(GLUT_ELAPSED_TIME);
-	std::cout << "FPS: " << ((double) frames++) / (curr_time - race.start_time) * 1000 << std::endl;
+	clock_t curr_time = clock();
+	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
+		return;
 
 	if (race.paused)
-	return;
+		return;
 
+	std::cout << "Lap: " << race.player_car.lap << " Check: "
+			<< race.player_car.checkpoint << std::endl;
 	if (race.finished()) {
 		race.paused = true;
 		if (race.player_car.lap == race.max_lap)
-		std::cout << "You win!" << std::endl;
+			std::cout << "You win!" << std::endl;
 		else
-		std::cout << "You lose!" << std::endl;
+			std::cout << "You lose!" << std::endl;
 		return;
 	}
 
 	if (keystates['s'])
-	race.player_car.brake();
+		race.player_car.brake();
 	else if (keystates['w'])
-	race.player_car.gas();
+		race.player_car.gas();
 	else
-	race.player_car.idle();
+		race.player_car.idle();
 
 	if (keystates['a'])
-	race.player_car.turn_left();
+		race.player_car.turn_left();
 	if (keystates['d'])
-	race.player_car.turn_right();
+		race.player_car.turn_right();
 
 	race.update();
 	//printf("Light position: (%f, %f, %f)\n", gLight.position[0], gLight.position[1], gLight.position[2] );
+
 }
 
 void onDisplay() {
@@ -199,15 +202,15 @@ void onDisplay() {
 			glm::value_ptr(gLight.position));
 	glUniform3fv(glGetUniformLocation(programID, "light_intensities"), 1,
 			glm::value_ptr(gLight.intensities));
-	//envio do coeficiente ambiente
-	glUniform1f(glGetUniformLocation(programID, "light_ambient_coefficient"),
-			gLight.ambient_coefficient);
-	//envio da cor especular: escolhi por enviar a cor BRANCA
-	glUniform3fv(glGetUniformLocation(programID, "COR_ESPECULAR_MAT"), 1,
-			glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-	// INTENSIDADE da iluminacao ESPECULAR
-	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-			shininess);
+    //envio do coeficiente ambiente
+    glUniform1f(glGetUniformLocation(programID, "light_ambient_coefficient"),
+                gLight.ambient_coefficient);
+    //envio da cor especular: escolhi por enviar a cor BRANCA
+    glUniform3fv(glGetUniformLocation(programID, "COR_ESPECULAR_MAT"),
+                  1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+    // INTENSIDADE da iluminacao ESPECULAR
+    glUniform1f(glGetUniformLocation(programID, "material_shininess"),
+                shininess);
 
 	/**************************************************************************************************************/
 
@@ -262,8 +265,7 @@ int main(int argc, char* argv[]) {
 	if (init_resources() != 0) {
 
 		glutDisplayFunc(onDisplay);
-//		glutIdleFunc(idle);
-		glutTimerFunc(15, (void (*)(int)) idle, 0);
+		glutIdleFunc(idle);
 		glutIgnoreKeyRepeat(1);
 		glutKeyboardFunc(keyboardDown);
 		glutKeyboardUpFunc(keyboardUp);
