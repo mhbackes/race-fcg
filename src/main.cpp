@@ -38,7 +38,10 @@ bool keystates[256];
 struct Light {
 	glm::vec3 position;
 	glm::vec3 intensities; //a.k.a. the color of the light
+	float ambient_coefficient;
 };
+
+GLfloat shininess = 50.0f;
 
 Light gLight;
 Race race;
@@ -50,6 +53,7 @@ int init_resources() {
 	//light
 	gLight.position = glm::vec3(0.0f, 20.0f, 0.0f);
 	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
+	gLight.ambient_coefficient = 0.005f;
 
 	//program
 	programID = LoadShaders("resources/shader/vertex.shader",
@@ -64,14 +68,14 @@ int init_resources() {
 	Rectangle car_pos(Point(-50, -20), Angle(180), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.00095, -0.001, -0.009, 1.2);
 	race.player_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro.bmp", programID);
+			"resources/textures/green.bmp", programID);
 
 	//ia car
 
 	Rectangle dummy_car_pos(Point(-30, -20), Angle(180), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.001, -0.001, -0.004, 2);
 	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro.bmp", programID);
+			"resources/textures/green.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(-40, -25);
 	race.ai_cars.push_back(dummy_car);
@@ -182,6 +186,15 @@ void onDisplay() {
 			glm::value_ptr(gLight.position));
 	glUniform3fv(glGetUniformLocation(programID, "light_intensities"), 1,
 			glm::value_ptr(gLight.intensities));
+    //envio do coeficiente ambiente
+    glUniform1f(glGetUniformLocation(programID, "light_ambient_coefficient"),
+                gLight.ambient_coefficient);
+    //envio da cor especular: escolhi por enviar a cor BRANCA
+    glUniform3fv(glGetUniformLocation(programID, "COR_ESPECULAR_MAT"),
+                  1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+    // INTENSIDADE da iluminacao ESPECULAR
+    glUniform1f(glGetUniformLocation(programID, "material_shininess"),
+                shininess);
 
 	/**************************************************************************************************************/
 
