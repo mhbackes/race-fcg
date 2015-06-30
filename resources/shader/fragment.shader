@@ -28,7 +28,7 @@ void main() {
     vec3 surfaceToLight = normalize(light_position - fragPosition);
 
     //calculate the cosine of the angle of incidence
-    float brightness = dot(normal, surfaceToLight) / (length(surfaceToLight) * length(normal));
+    float brightness = dot(normal, surfaceToLight);
     brightness = clamp(brightness, 0, 1);
 
     //calculate final color of the pixel, based on:
@@ -38,8 +38,8 @@ void main() {
     vec4 surfaceColor = texture(tex, fragTexCoord);
 
     vec3 surfaceToView = normalize(camera_position - fragPosition);
-    vec3 reflection = reflect(surfaceToLight, normal);
-    float specular_brightness = dot(reflection, surfaceToView) / (length(reflection) * length(surfaceToView));
+    vec3 reflection = normalize(reflect(surfaceToLight, normal));
+    float specular_brightness = max(0, dot(reflection, surfaceToView));
 	specular_brightness = clamp(specular_brightness, 0, 1);
 	
     vec3 diffuse_shading = brightness * light_diffuse * surfaceColor.rgb;

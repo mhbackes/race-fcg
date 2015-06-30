@@ -213,7 +213,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 
 	//iluminacao
 	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-			1000);
+			10000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
