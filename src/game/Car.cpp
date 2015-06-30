@@ -10,6 +10,7 @@
 #include "../common/texture.hpp"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 using namespace std;
 
 const float Car::MAX_SPEED = 1;
@@ -151,11 +152,16 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 			+ 3 * normals.size();
 	GLfloat vertex_data[vertex_data_size];
 
-	for (int i = 0; i < vertices.size(); i++) {
+	float max_x = 0;
+	float max_y = 0;
 
+	for (int i = 0; i < vertices.size(); i++) {
 		vertex_data[i * 8] = vertices[i][0];
 		vertex_data[(i * 8) + 1] = vertices[i][1];
 		vertex_data[(i * 8) + 2] = vertices[i][2];
+
+		max_x = std::max(max_x, fabs(vertices[i].x));
+		max_y = std::max(max_y, fabs(vertices[i].z));
 
 		vertex_data[(i * 8) + 3] = uvs[i][0];
 		vertex_data[(i * 8) + 4] = uvs[i][1];
@@ -163,8 +169,9 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 		vertex_data[(i * 8) + 5] = normals[i][0];
 		vertex_data[(i * 8) + 6] = normals[i][1];
 		vertex_data[(i * 8) + 7] = normals[i][2];
-
 	}
+	position.height = max_x * 2;
+	position.base = max_y * 2;
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data,
 	GL_STATIC_DRAW);
@@ -198,7 +205,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 car_pos = glm::vec3(car_center.x, 0, car_center.y);
 	glm::mat4 rotation = glm::rotate(onemat,
-			-(position.angle + Angle(90)).get_degree(), up);
+			-(position.angle + Angle(180)).get_degree(), up);
 	glm::mat4 size = glm::mat4(1);
 	glm::mat4 translation = glm::translate(onemat, car_pos);
 	glm::mat4 model = translation * size * rotation;
@@ -217,7 +224,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glBindVertexArray(vertexBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-//	draw_position(mvp, modelID, mvpID);
+	draw_position(mvp, modelID, mvpID);
 }
 
 void Car::turn(Rectangle& pos) {

@@ -91,8 +91,8 @@ int init_resources() {
 	race.ai_cars.push_back(dummy_car);
 
 	//camera
-//	race.camera = Camera(&race.player_car); // camera on player
-	race.camera = Camera(&race.ai_cars[0]); // camera on bot
+	race.camera = Camera(&race.player_car); // camera on player
+//	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
 	race.track.load_model("resources/objects/dijon.obj",
