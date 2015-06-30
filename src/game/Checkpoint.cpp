@@ -94,24 +94,8 @@ Checkpoint::~Checkpoint() {
 	// TODO Auto-generated destructor stub
 }
 
-void Checkpoint::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
-//	glm::mat4 model(1.0);
-//	glm::mat4 MVP = mvp * model;
-//
-//	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
-//	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
-//
-//	glBegin(GL_TRIANGLE_FAN);
-//	glColor3f(0.0, 1.0, 0);
-//	glNormal3f(0, 1, 0);
-//	glVertex3f(center.x, 0, center.y);
-//	for (int i = 0; i <= 300; i++) {
-//		float angle = 2 * M_PI * i / 300;
-//		float x = radius * cos(angle) + center.x;
-//		float y = radius * sin(angle) + center.y;
-//		glVertex3f(x, 0, y);
-//	}
-//	glEnd();
+void Checkpoint::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID,
+		GLuint programID) {
 	glm::mat4 onemat = glm::mat4(1.0f);
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 check_pos = glm::vec3(center.x, 0, center.y);
@@ -120,6 +104,10 @@ void Checkpoint::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glm::mat4 translation = glm::translate(onemat, check_pos);
 	glm::mat4 model = translation * size * rotation;
 	glm::mat4 MVP = mvp * model;
+
+	// INTENSIDADE da iluminacao ESPECULAR
+	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
+				10000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);

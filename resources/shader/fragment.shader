@@ -25,7 +25,7 @@ void main() {
     vec3 fragPosition = vec3(model * vec4(fragVert, 1));
 
     //calculate the vector from this pixels surface to the light source
-    vec3 surfaceToLight = light_position - fragPosition;
+    vec3 surfaceToLight = normalize(light_position - fragPosition);
 
     //calculate the cosine of the angle of incidence
     float brightness = dot(normal, surfaceToLight) / (length(surfaceToLight) * length(normal));
@@ -37,7 +37,7 @@ void main() {
     // 3. The texture and texture coord: texture(tex, fragTexCoord)
     vec4 surfaceColor = texture(tex, fragTexCoord);
 
-    vec3 surfaceToView = camera_position - fragPosition;
+    vec3 surfaceToView = normalize(camera_position - fragPosition);
     vec3 reflection = reflect(surfaceToLight, normal);
     float specular_brightness = dot(reflection, surfaceToView) / (length(reflection) * length(surfaceToView));
 	specular_brightness = clamp(specular_brightness, 0, 1);

@@ -29,7 +29,7 @@ struct Checkpoint: public Circle {
 	Checkpoint();
 	Checkpoint(Point& center, float radius);
 	static bool load_model(char* obj_path, char* bmp_path, GLuint programID);
-	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
+	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID, GLuint programID);
 	virtual ~Checkpoint();
 };
 

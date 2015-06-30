@@ -34,7 +34,7 @@ struct Track {
 	bool contains(Car& car);
 
 	bool load_model(char* obj_path, char* bmp_path, GLuint programID);
-	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
+	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID, GLuint programID);
 
 	virtual ~Track();
 };

@@ -107,7 +107,7 @@ void Car::update() {
 
 void Car::update_checkpoint() {
 	if (intersects(race->checkpoints[checkpoint])) {
-		checkpoint+=15;
+		checkpoint += 15;
 	}
 	if (checkpoint >= race->checkpoints.size()) {
 		checkpoint = 0;
@@ -199,7 +199,7 @@ bool Car::load_model(char* obj_path, char* bmp_path, GLuint programID) {
 	return res;
 }
 
-void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
+void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 	Point& car_center = position.center;
 	glm::mat4 onemat = glm::mat4(1.0f);
 	glm::vec3 up = glm::vec3(0, 1, 0);
@@ -210,6 +210,10 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 	glm::mat4 translation = glm::translate(onemat, car_pos);
 	glm::mat4 model = translation * size * rotation;
 	glm::mat4 MVP = mvp * model;
+
+	//iluminacao
+	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
+			1000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);

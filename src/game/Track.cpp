@@ -34,9 +34,11 @@ bool Track::contains(Car& car) {
 	return true;
 }
 
-void Track::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
+void Track::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 MVP = mvp * model;
+
+	glUniform1f(glGetUniformLocation(programID, "material_shininess"), 1000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);

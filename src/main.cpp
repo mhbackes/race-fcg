@@ -36,10 +36,6 @@ GLuint modelID;
 
 bool keystates[256];
 
-
-
-GLfloat shininess = 50.0f;
-
 Light gLight;
 Race race;
 
@@ -51,7 +47,7 @@ int init_resources() {
 	Light::position = glm::vec3(0.0f, 20.0f, 0.0f);
 	Light::diffuse_component = glm::vec3(1.0f, 1.0f, 1.0f);
 	Light::specular_component = glm::vec3(1.0f, 1.0f, 1.0f);
-	Light::ambient_component =  glm::vec3(.1f, .1f, .1f);
+	Light::ambient_component = glm::vec3(.1f, .1f, .1f);
 
 	//program
 	programID = LoadShaders("resources/shader/vertex.shader",
@@ -194,9 +190,9 @@ void onDisplay() {
 	/**passa os parametros para a glsl***************************************************************************/
 
 	glUniform1ui(glGetAttribLocation(programID, "tex"), 0);
-
+	glm::vec3 camera_pos = race.camera.eye_back();
 	glUniform3fv(glGetUniformLocation(programID, "camera_position"), 1,
-				glm::value_ptr(race.camera.eye_back()));
+			glm::value_ptr(camera_pos));
 	//iluminacao
 	glUniform3fv(glGetUniformLocation(programID, "light_position"), 1,
 			glm::value_ptr(Light::position));
@@ -204,22 +200,18 @@ void onDisplay() {
 			glm::value_ptr(Light::diffuse_component));
 	glUniform3fv(glGetUniformLocation(programID, "light_specular"), 1,
 			glm::value_ptr(Light::specular_component));
-	glUniform3fv(glGetUniformLocation(programID, "light_ambient"),1,
+	glUniform3fv(glGetUniformLocation(programID, "light_ambient"), 1,
 			glm::value_ptr(Light::ambient_component));
-	// INTENSIDADE da iluminacao ESPECULAR
-	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-			shininess);
-
 	/**************************************************************************************************************/
 
-	race.player_car.draw(mvp, modelID, mvpID);
-	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID);
+	race.player_car.draw(mvp, modelID, mvpID, programID);
+	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID, programID);
 //	std::cout << "Position: " << race.player_car.position.center.to_string()
 //			<< " Check: " << race.player_car.checkpoint << " Lap: "
 //			<< race.player_car.lap << " Speed: " << race.player_car.speed
 //			<< std::endl;
 	for (AICar& car : race.ai_cars) {
-		car.draw(mvp, modelID, mvpID);
+		car.draw(mvp, modelID, mvpID, programID);
 //		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
 //		std::cout << "Position: "
 //				<< car.position.center.to_string()
@@ -227,8 +219,8 @@ void onDisplay() {
 //				<< car.lap << " Speed: " << car.speed
 //				<< std::endl;
 	}
-	race.track.draw(mvp, modelID, mvpID);
-	race.terrain.draw(mvp, modelID, mvpID);
+	race.track.draw(mvp, modelID, mvpID, programID);
+	race.terrain.draw(mvp, modelID, mvpID, programID);
 
 	glutSwapBuffers();
 	glutPostRedisplay();

@@ -70,7 +70,7 @@ struct Car {
 	virtual bool collides(Rectangle& new_pos);
 
 	bool load_model(char* obj_path, char* bmp_path, GLuint programID);
-	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
+	void draw(glm::mat4& mvp, GLuint modelID, GLuint matrixID, GLuint programID);
 
 	void draw_position(glm::mat4& mvp, GLuint modelID, GLuint matrixID);
 
