@@ -33,6 +33,14 @@ float Point::distance(Point& p) {
 	return sqrt(diff_x * diff_x + diff_y * diff_y);
 }
 
+float Point::distance_x(Point& p){
+	return fabs(x - p.x);
+}
+
+float Point::distance_y(Point& p){
+	return fabs(y - p.y);
+}
+
 string Point::to_string() {
 	stringstream stream;
 	stream << "(" << x << ", " << y << ")";
@@ -40,9 +48,12 @@ string Point::to_string() {
 }
 
 Angle Point::angle(Point& a, Point& b) {
-	float distpa = distance(a);
-	float distpb = distance(b);
-	float distab = a.distance(b);
-	float angle = acos((distpa * distpa + distpb * distpb + distab * distab) / (2 * distpa * distpb));
+	float dxa = distance_x(a);
+	float dxb = distance_x(b);
+	float dya = distance_y(a);
+	float dyb = distance_y(b);
+	float dista = distance(a);
+	float distb = distance(b);
+	float angle = acos((dxa * dxb + dya * dyb) / (dista * distb));
 	return Angle(angle * 180 / M_PI);
 }

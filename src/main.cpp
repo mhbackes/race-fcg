@@ -64,8 +64,8 @@ int init_resources() {
 
 	//player car
 	Rectangle car_pos(Point(30, -24.5), Angle(180), 6.52, 2.6);
-	race.player_car = Car(&race, car_pos, 0.00095, -0.001, -0.009, 1.2);
-	race.player_car.load_model("resources/objects/tank.obj",
+	race.player_car = Car(&race, car_pos, 0.0015, -0.001, -0.009, 1.2);
+	race.player_car.load_model("resources/objects/camaro.obj",
 			"resources/textures/cammo.bmp", programID);
 
 	//ia car

@@ -20,6 +20,8 @@ struct Point {
 	Point(float x, float y);
 	void move(float dx, float dy);
 	float distance(Point& p);
+	float distance_x(Point& p);
+	float distance_y(Point& p);
 
 	Angle angle(Point& a, Point& b);
 

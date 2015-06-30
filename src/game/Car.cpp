@@ -98,7 +98,6 @@ void Car::update() {
 	new_pos.move(dx, dy);
 	turn(new_pos);
 	if (collides(new_pos)) {
-		speed *= 0.9;
 		return;
 	}
 	position = new_pos;
@@ -212,8 +211,7 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 	glm::mat4 MVP = mvp * model;
 
 	//iluminacao
-	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-			10000);
+	glUniform1f(glGetUniformLocation(programID, "material_shininess"), 10000);
 
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
@@ -270,8 +268,31 @@ void Car::draw_position(glm::mat4& mvp, GLuint modelID, GLuint mvpID) {
 
 bool Car::collides(Rectangle& pos) {
 	for (AICar& car : race->ai_cars) {
-		if (this != &car && car.intersects(pos))
+		if (this != &car && car.intersects(pos)) {
+			collision_speed(car);
 			return true;
+		}
 	}
 	return false;
+}
+
+void Car::collision_speed(Car& car) {
+	Angle diff_angle = position.angle - car.position.angle;
+	float diff = diff_angle.get_degree();
+	if (diff < 60 || diff > 300) { //parallel elastic collision
+		float new_speed = (speed + car.speed) / 2;
+		speed = new_speed * 0.95;
+		car.speed = new_speed * 1.05;
+	} else if (diff > 120 && diff < 240) { //frontal inelastic collision
+		float new_speed = (speed - car.speed) / 2;
+		if (new_speed >= 0) {
+			speed = new_speed;
+			car.speed = -new_speed;
+		} else {
+			speed = -new_speed;
+			car.speed = new_speed;
+		}
+	} else { //lateral collision
+		speed = 0;
+	}
 }

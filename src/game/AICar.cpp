@@ -20,12 +20,18 @@ AICar::AICar(Race* race, Rectangle& pos, float ga, float ia, float ba, Angle ta)
 }
 
 bool AICar::collides(Rectangle& new_pos) {
+	if(race->player_car.intersects(new_pos)){
+		collision_speed(race->player_car);
+		return true;
+	}
 	for (AICar& car : race->ai_cars) {
 		Car* car_p = &car;
-		if (this != &car && car.intersects(new_pos))
+		if (this != &car && car.intersects(new_pos)){
+			collision_speed(car);
 			return true;
+		}
 	}
-	return race->player_car.intersects(new_pos);
+	return false;
 }
 
 float AICar::direction(Point& destination) {
