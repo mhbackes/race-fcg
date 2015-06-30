@@ -34,7 +34,11 @@ GLuint programID;
 GLuint mvpID;
 GLuint modelID;
 
-bool keystates[256];
+bool keystates[260];
+const int UP_ARROW = 256;
+const int DOWN_ARROW = 257;
+const int LEFT_ARROW = 258;
+const int RIGHT_ARROW = 259;
 
 Light gLight;
 Race race;
@@ -115,8 +119,7 @@ int init_resources() {
 
 }
 
-void keyboardDown(unsigned char key, int x, int y) {
-
+void key_down(unsigned char key, int x, int y) {
 	keystates[key] = true;
 
 	if (keystates['p'])
@@ -136,10 +139,43 @@ void keyboardDown(unsigned char key, int x, int y) {
 		cp.close();
 	}
 }
-void keyboardUp(unsigned char key, int x, int y) {
+
+void key_up(unsigned char key, int x, int y) {
 
 	keystates[key] = false;
 
+}
+
+void spec_key_down(int key, int x, int y) {
+	switch (key) {
+	case GLUT_KEY_UP:
+		keystates[UP_ARROW] = true;
+		break;
+	case GLUT_KEY_DOWN:
+		keystates[DOWN_ARROW] = true;
+		break;
+	case GLUT_KEY_LEFT:
+		keystates[LEFT_ARROW] = true;
+		break;
+	case GLUT_KEY_RIGHT:
+		keystates[RIGHT_ARROW] = true;
+	}
+}
+
+void spec_key_up(int key, int x, int y) {
+	switch (key) {
+	case GLUT_KEY_UP:
+		keystates[UP_ARROW] = false;
+		break;
+	case GLUT_KEY_DOWN:
+		keystates[DOWN_ARROW] = false;
+		break;
+	case GLUT_KEY_LEFT:
+		keystates[LEFT_ARROW] = false;
+		break;
+	case GLUT_KEY_RIGHT:
+		keystates[RIGHT_ARROW] = false;
+	}
 }
 
 float roty = 180;
@@ -151,8 +187,8 @@ void idle() {
 	if (race.paused)
 		return;
 
-	std::cout << "Lap: " << race.player_car.lap << " Check: "
-			<< race.player_car.checkpoint << std::endl;
+//	std::cout << "Lap: " << race.player_car.lap << " Check: "
+//			<< race.player_car.checkpoint << std::endl;
 	if (race.finished()) {
 		race.paused = true;
 		if (race.player_car.lap == race.max_lap)
@@ -162,16 +198,16 @@ void idle() {
 		return;
 	}
 
-	if (keystates['s'])
+	if (keystates['s'] || keystates[DOWN_ARROW])
 		race.player_car.brake();
-	else if (keystates['w'])
+	else if (keystates['w'] || keystates[UP_ARROW])
 		race.player_car.gas();
 	else
 		race.player_car.idle();
 
-	if (keystates['a'])
+	if (keystates['a'] || keystates[LEFT_ARROW])
 		race.player_car.turn_left();
-	if (keystates['d'])
+	if (keystates['d'] || keystates[RIGHT_ARROW])
 		race.player_car.turn_right();
 
 	race.update();
@@ -205,7 +241,8 @@ void onDisplay() {
 	/**************************************************************************************************************/
 
 	race.player_car.draw(mvp, modelID, mvpID, programID);
-	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID, programID);
+	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID,
+			programID);
 //	std::cout << "Position: " << race.player_car.position.center.to_string()
 //			<< " Check: " << race.player_car.checkpoint << " Lap: "
 //			<< race.player_car.lap << " Speed: " << race.player_car.speed
@@ -257,8 +294,10 @@ int main(int argc, char* argv[]) {
 		glutDisplayFunc(onDisplay);
 		glutIdleFunc(idle);
 		glutIgnoreKeyRepeat(1);
-		glutKeyboardFunc(keyboardDown);
-		glutKeyboardUpFunc(keyboardUp);
+		glutKeyboardFunc(key_down);
+		glutKeyboardUpFunc(key_up);
+		glutSpecialFunc(spec_key_down);
+		glutSpecialUpFunc(spec_key_up);
 
 		glutMainLoop();
 	}
