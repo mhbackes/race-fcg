@@ -23,6 +23,7 @@
 #include "game/Car.h"
 #include "game/Camera.h"
 #include "game/Track.h"
+#include "game/Light.h"
 
 #include "common/shader.hpp"
 
@@ -35,11 +36,7 @@ GLuint modelID;
 
 bool keystates[256];
 
-struct Light {
-	glm::vec3 position;
-	glm::vec3 intensities; //a.k.a. the color of the light
-	float ambient_coefficient;
-};
+
 
 GLfloat shininess = 50.0f;
 
@@ -51,9 +48,10 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	//light
-	gLight.position = glm::vec3(0.0f, 20.0f, 0.0f);
-	gLight.intensities = glm::vec3(1.0f, 1.0f, 1.0f);
-	gLight.ambient_coefficient = 0.005f;
+	Light::position = glm::vec3(0.0f, 20.0f, 0.0f);
+	Light::diffuse_component = glm::vec3(1.0f, 1.0f, 1.0f);
+	Light::specular_component = glm::vec3(1.0f, 1.0f, 1.0f);
+	Light::ambient_component =  glm::vec3(.1f, .1f, .1f);
 
 	//program
 	programID = LoadShaders("resources/shader/vertex.shader",
@@ -197,20 +195,20 @@ void onDisplay() {
 
 	glUniform1ui(glGetAttribLocation(programID, "tex"), 0);
 
+	glUniform3fv(glGetUniformLocation(programID, "camera_position"), 1,
+				glm::value_ptr(race.camera.eye_back()));
 	//iluminacao
 	glUniform3fv(glGetUniformLocation(programID, "light_position"), 1,
-			glm::value_ptr(gLight.position));
-	glUniform3fv(glGetUniformLocation(programID, "light_intensities"), 1,
-			glm::value_ptr(gLight.intensities));
-    //envio do coeficiente ambiente
-    glUniform1f(glGetUniformLocation(programID, "light_ambient_coefficient"),
-                gLight.ambient_coefficient);
-    //envio da cor especular: escolhi por enviar a cor BRANCA
-    glUniform3fv(glGetUniformLocation(programID, "COR_ESPECULAR_MAT"),
-                  1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-    // INTENSIDADE da iluminacao ESPECULAR
-    glUniform1f(glGetUniformLocation(programID, "material_shininess"),
-                shininess);
+			glm::value_ptr(Light::position));
+	glUniform3fv(glGetUniformLocation(programID, "light_diffuse"), 1,
+			glm::value_ptr(Light::diffuse_component));
+	glUniform3fv(glGetUniformLocation(programID, "light_specular"), 1,
+			glm::value_ptr(Light::specular_component));
+	glUniform3fv(glGetUniformLocation(programID, "light_ambient"),1,
+			glm::value_ptr(Light::ambient_component));
+	// INTENSIDADE da iluminacao ESPECULAR
+	glUniform1f(glGetUniformLocation(programID, "material_shininess"),
+			shininess);
 
 	/**************************************************************************************************************/
 

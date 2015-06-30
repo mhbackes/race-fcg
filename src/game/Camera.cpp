@@ -125,3 +125,16 @@ void Camera::toggle_rear() {
 		vision = NORMAL;
 	}
 }
+
+glm::vec3 Camera::position() {
+	switch (vision) {
+	case NORMAL:
+		eye_back();
+		break;
+	case REAR:
+		eye_front();
+		break;
+	case EAGLE:
+		eye_eagle();
+	}
+}
