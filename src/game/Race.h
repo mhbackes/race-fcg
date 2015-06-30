@@ -15,18 +15,17 @@
 #include "Camera.h"
 #include "Terrain.h"
 #include <vector>
-#include <ctime>
 using std::vector;
 
 struct Race {
-	static const clock_t clocks_per_frame;
+	static const float milisec_per_frame;
 
 	Camera camera;
 	Car player_car;
 	vector<AICar> ai_cars;
 	Track track;
 	Terrain terrain;
-	clock_t start_time, curr_time;
+	GLint start_time, curr_time;
 	vector<Checkpoint> checkpoints;
 	bool paused;
 	int max_lap;
