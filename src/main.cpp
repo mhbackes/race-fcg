@@ -54,6 +54,14 @@ inline float clamp(float x, float a, float b) {
 	return x < a ? a : (x > b ? b : x);
 }
 
+void play_sound(sf::Music& sound, int volume, bool loop) {
+	sound.pause();
+	sound.setLoop(loop);
+	sound.setVolume(volume);
+	sound.play();
+}
+
+
 int init_resources() {
 	glClearColor(0.52f, 0.80f, 0.98f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -66,6 +74,7 @@ int init_resources() {
 	engine.openFromFile("resources/etc/sound/engine.wav");
 	coin.openFromFile("resources/etc/sound/coin.ogg");
 	collide.openFromFile("resources/etc/sound/xplo.wav");
+	music.openFromFile("resources/etc/sound/music.ogg");
 
 	//light
 	Light::position = glm::vec3(0.0f, 20.0f, 0.0f);
@@ -139,6 +148,7 @@ int init_resources() {
 	race.reset_time();
 	race.max_lap = 3;
 	race.paused = false;
+	play_sound(music, 40, 1);
 
 	return programID;
 
@@ -164,6 +174,8 @@ void game_restart() {
 	engine.pause();
 	boost.pause();
 	end.pause();
+	play_sound(music, 40, 1);
+
 }
 
 void key_down(unsigned char key, int x, int y) {
@@ -225,13 +237,6 @@ void spec_key_up(int key, int x, int y) {
 	}
 }
 
-void play_sound(sf::Music& sound, int volume, bool loop) {
-	sound.pause();
-	sound.setLoop(loop);
-	sound.setVolume(volume);
-	sound.play();
-}
-
 float roty = 180;
 void idle() {
 	if (keystates['r'])
@@ -253,7 +258,7 @@ void idle() {
 		engine.pause();
 		boost.pause();
 		music.pause();
-		play_sound(end, 30, 1);
+		play_sound(end, 70, 1);
 		race.paused = true;
 		return;
 	}
@@ -353,7 +358,7 @@ void onDisplay() {
 	//race.skybox.draw(mvp, modelID, mvpID, programID);
 
 	if(race.player_car.speed != 0 && !race.finished())
-		play_sound(engine, 50, 1);
+		play_sound(engine, 35, 1);
 	else
 		engine.pause();
 
