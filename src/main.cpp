@@ -194,20 +194,28 @@ void spec_key_up(int key, int x, int y) {
 }
 
 void game_restart() {
-	race.paused = false;
+	int i = race.ai_cars.size();
 	for (AICar& car : race.ai_cars) {
 		car.lap = 0;
 		car.checkpoint = 0;
+		car.position = Rectangle(Point((100 - (i - 1) * 15), -24.5),
+				Angle(180), 6.52, 2.6);
+		car.speed = Car::MIN_SPEED;
+		i--;
 	}
-	free_resources();
-	init_resources();
+	race.player_car.position = Rectangle(Point(30, -24.5),
+			Angle(180), 6.52,2.6);
+	race.player_car.lap = 0;
+	race.player_car.checkpoint = 0;
+	race.player_car.speed = Car::MIN_SPEED;
+	race.paused = false;
 }
 
 float roty = 180;
 void idle() {
 	clock_t curr_time = clock();
 	if (keystates['r'])
-		//game_restart();
+		game_restart();
 	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
 		return;
 
