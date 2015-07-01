@@ -285,7 +285,7 @@ void idle() {
 		play_sound(coin, 30, 0);
 
 	//evita vários sons de colisão ao mesmo tempo
-	if((Car::collision_cout - last_collision_sound) > 20){
+	if((Car::collision_cout - last_collision_sound) > 8){
 		last_collision_sound = Car::collision_cout;
 		play_sound(collide, 30, 0);
 	}
