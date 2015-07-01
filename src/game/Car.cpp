@@ -118,14 +118,12 @@ void Car::update() {
 	Rectangle new_pos = position;
 	new_pos.move(dx, dy);
 	turn(new_pos);
-	if (collides(new_pos)) {
+	if (collides(new_pos))
 		return;
-	}
 	position = new_pos;
 	update_checkpoint();
 	if(boost_load < MAX_BOOST_LOAD)
 		boost_load += 0.001;
-	std::cout << boost_load << " " << boost_active << endl;
 }
 
 void Car::update_checkpoint() {

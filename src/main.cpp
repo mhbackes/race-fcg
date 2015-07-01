@@ -57,12 +57,12 @@ int init_resources() {
 	glClearColor(0.52f, 0.80f, 0.98f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
-	initText2D("resources/textures/Arial.dds");
+	initText2D("/home/prlanzarin/github/race-fcg/resources/textures/Arial.dds");
 
-	end.openFromFile("resources/etc/sound/end.wav");
-	boost.openFromFile("resources/etc/sound/boost.wav");
-	engine.openFromFile("resources/etc/sound/engine.wav");
-	coin.openFromFile("resources/etc/sound/coin.ogg");
+	end.openFromFile("/home/prlanzarin/github/race-fcg/resources/etc/sound/end.wav");
+	boost.openFromFile("/home/prlanzarin/github/race-fcg/resources/etc/sound/boost.wav");
+	engine.openFromFile("/home/prlanzarin/github/race-fcg/resources/etc/sound/engine.wav");
+	coin.openFromFile("/home/prlanzarin/github/race-fcg/resources/etc/sound/coin.ogg");
 
 	//light
 	Light::position = glm::vec3(0.0f, 20.0f, 0.0f);
@@ -71,48 +71,48 @@ int init_resources() {
 	Light::ambient_component = glm::vec3(.1f, .1f, .1f);
 
 	//program
-	programID = LoadShaders("resources/shader/vertex.shader",
-			"resources/shader/fragment.shader");
+	programID = LoadShaders("/home/prlanzarin/github/race-fcg/resources/shader/vertex.shader",
+			"/home/prlanzarin/github/race-fcg/resources/shader/fragment.shader");
 	glUseProgram(programID);
 	mvpID = glGetUniformLocation(programID, "MVP");
 	modelID = glGetUniformLocation(programID, "model");
 
 	glActiveTexture(GL_TEXTURE0);
-	/*race.skybox.load_model("resources/textures/f.bmp",
-			"resources/textures/b.bmp",
-			"resources/textures/l.bmp",
-			"resources/textures/r.bmp",
-			"resources/textures/t.bmp",
-			"resources/textures/bt.bmp", programID); */
+	/*race.skybox.load_model("/home/prlanzarin/github/race-fcg/resources/textures/f.bmp",
+			"/home/prlanzarin/github/race-fcg/resources/textures/b.bmp",
+			"/home/prlanzarin/github/race-fcg/resources/textures/l.bmp",
+			"/home/prlanzarin/github/race-fcg/resources/textures/r.bmp",
+			"/home/prlanzarin/github/race-fcg/resources/textures/t.bmp",
+			"/home/prlanzarin/github/race-fcg/resources/textures/bt.bmp", programID); */
 	//player car
 	Rectangle car_pos(Point(30, -24.5), Angle(180), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.001, -0.001, -0.009, 1.2);
-	race.player_car.load_model("resources/objects/tank.obj",
-			"resources/textures/cammo.bmp", programID);
+	race.player_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/tank.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/cammo.bmp", programID);
 
 	//ia car
 
 	Rectangle dummy_car_pos(Point(100, -24.5), Angle(180), 6.52, 2.6);
 	AICar dummy_car = AICar(&race, dummy_car_pos, 0.001, -0.001, -0.004, 2);
-	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro-green.bmp", programID);
+	dummy_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro-green.bmp", programID);
 
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(85, -24.5);
-	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro-blue.bmp", programID);
+	dummy_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro-blue.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(70, -24.5);
-	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro-red.bmp", programID);
+	dummy_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro-red.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(55, -24.5);
-	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro-orange.bmp", programID);
+	dummy_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro-orange.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 	dummy_car.position.center = Point(40, -24.5);
-	dummy_car.load_model("resources/objects/camaro.obj",
-			"resources/textures/camaro-yellow.bmp", programID);
+	dummy_car.load_model("/home/prlanzarin/github/race-fcg/resources/objects/camaro.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/camaro-yellow.bmp", programID);
 	race.ai_cars.push_back(dummy_car);
 
 	//camera
@@ -120,17 +120,17 @@ int init_resources() {
 //	race.camera = Camera(&race.ai_cars[0]); // camera on bot
 
 	//track
-	race.track.load_model("resources/objects/dijon.obj",
-			"resources/textures/road.bmp", programID);
+	race.track.load_model("/home/prlanzarin/github/race-fcg/resources/objects/dijon.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/road.bmp", programID);
 
 	//terrain
-	race.terrain.load_model("resources/objects/terrain.obj",
-			"resources/textures/grass.bmp", programID);
+	race.terrain.load_model("/home/prlanzarin/github/race-fcg/resources/objects/terrain.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/grass.bmp", programID);
 
 	//checkpoints parsing
-	Checkpoint::load_model("resources/objects/flag.obj",
-			"resources/textures/green.bmp", programID);
-	race.parse_checkpoints("resources/etc/checkpoints4.txt");
+	Checkpoint::load_model("/home/prlanzarin/github/race-fcg/resources/objects/flag.obj",
+			"/home/prlanzarin/github/race-fcg/resources/textures/green.bmp", programID);
+	race.parse_checkpoints("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints4.txt");
 
 	//race
 	race.reset_time();
@@ -178,7 +178,7 @@ void key_down(unsigned char key, int x, int y) {
 	if (key == 'c') {
 		Point np = race.player_car.position.center;
 		std::ofstream cp;
-		cp.open("resources/etc/checkpoints.txt", std::ios_base::app);
+		cp.open("/home/prlanzarin/github/race-fcg/resources/etc/checkpoints.txt", std::ios_base::app);
 		cp << np.x << " " << np.y << " " << 5 << std::endl;
 		cp.close();
 	}
@@ -344,7 +344,7 @@ void onDisplay() {
 			glm::value_ptr(Light::ambient_component));
 	/**************************************************************************************************************/
 	//race.skybox.draw(mvp, modelID, mvpID, programID);
-	if(race.player_car.speed != 0)
+	if(race.player_car.speed != 0 && !race.finished())
 		play_sound(engine, 50, 1);
 	else engine.pause();
 
