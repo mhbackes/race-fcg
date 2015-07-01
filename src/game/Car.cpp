@@ -125,7 +125,7 @@ void Car::update() {
 	update_checkpoint();
 	if(boost_load < MAX_BOOST_LOAD)
 		boost_load += 0.001;
-	std::cout << boost_load << " " << boost_active << endl;
+//	std::cout << boost_load << " " << boost_active << endl;
 }
 
 void Car::update_checkpoint() {
