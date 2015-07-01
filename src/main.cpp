@@ -44,6 +44,10 @@ const int RIGHT_ARROW = 259;
 Light gLight;
 Race race;
 
+inline float clamp(float x, float a, float b) {
+    return x < a ? a : (x > b ? b : x);
+}
+
 int init_resources() {
 	glClearColor(0.52f, 0.80f, 0.98f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -226,6 +230,27 @@ void idle() {
 
 }
 
+void print_hud_info() {
+
+	char curr_speed[5];
+	snprintf(curr_speed, 6, "%f", fabs(race.camera.car->speed * 200));
+	printText2D(curr_speed, 50, 50, 50);
+	printText2D("Velocidade", 50, 100, 20);
+
+	char boost_n[3];
+	snprintf(boost_n, 4, "%d", (int)clamp((race.player_car.boost_load*100), 0, 100));
+	printText2D(boost_n, 600, 50, 50);
+	printText2D("BOOST", 600, 100, 20);
+
+	char m_lap[2], act_lap[2];
+	snprintf(act_lap, 3, "%d", (race.max_lap));
+	snprintf(m_lap, 3, "%d", (race.player_car.lap));
+	printText2D("LAP", 340, 550, 30);
+	printText2D(act_lap, 420, 515, 40);
+	printText2D("of", 384, 525, 20);
+	printText2D(m_lap, 350, 515, 40);
+}
+
 void onDisplay() {
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -270,21 +295,7 @@ void onDisplay() {
 	race.track.draw(mvp, modelID, mvpID, programID);
 	race.terrain.draw(mvp, modelID, mvpID, programID);
 
-	char curr_speed[5];
-	snprintf(curr_speed, 6, "%f", (race.camera.car->speed * 200));
-	printText2D(curr_speed, 50, 50, 50);
-	printText2D("Velocidade", 50, 100, 20);
-
-	char boost_n[4];
-	snprintf(boost_n, 5, "%f", (race.player_car.boost_load*100));
-	printText2D(boost_n, 550, 50, 50);
-	printText2D("BOOST", 550, 100, 20);
-
-	char m_lap[2], act_lap[2];
-	snprintf(act_lap, 3, "%d", (race.max_lap));
-	snprintf(m_lap, 3, "%d", (race.player_car.lap));
-	printText2D(act_lap, 750, 300, 50);
-	printText2D(m_lap, 750, 350, 50);
+	print_hud_info();
 
 	glutSwapBuffers();
 	glutPostRedisplay();
