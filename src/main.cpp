@@ -60,6 +60,7 @@ int init_resources() {
 
 	initText2D("resources/textures/Arial.dds");
 
+	//sound
 	end.openFromFile("resources/etc/sound/end.wav");
 	boost.openFromFile("resources/etc/sound/boost.wav");
 	engine.openFromFile("resources/etc/sound/engine.wav");
@@ -233,7 +234,6 @@ void play_sound(sf::Music& sound, int volume, bool loop) {
 
 float roty = 180;
 void idle() {
-	clock_t curr_time = clock();
 	if (keystates['r'])
 		game_restart();
 
@@ -245,9 +245,6 @@ void idle() {
 		glutLeaveMainLoop();
 		return;
 	}
-
-	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
-		return;
 
 	if (race.paused)
 		return;
@@ -279,14 +276,17 @@ void idle() {
 	}
 
 	int curr_check = race.player_car.checkpoint;
+	int collision_cout = Car::collision_cout;
 
 	race.update();
+
 	if(curr_check != race.player_car.checkpoint)
 		play_sound(coin, 30, 0);
 
+	int curr_time = glutGet(GLUT_ELAPSED_TIME);
 	//evita vários sons de colisão ao mesmo tempo
-	if((Car::collision_cout - last_collision_sound) > 20){
-		last_collision_sound = Car::collision_cout;
+	if(collision_cout != Car::collision_cout && (curr_time - last_collision_sound) > 200){
+		last_collision_sound = curr_time;
 		play_sound(collide, 30, 0);
 	}
 }
