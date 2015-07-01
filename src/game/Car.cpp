@@ -233,6 +233,8 @@ void Car::draw(glm::mat4& mvp, GLuint modelID, GLuint mvpID, GLuint programID) {
 	glm::mat4 model = translation * size * rotation;
 	glm::mat4 MVP = mvp * model;
 
+	glUseProgram(programID);
+
 	//iluminacao
 
 	glUniform1f(glGetUniformLocation(programID, "material_shininess"), 10000);
