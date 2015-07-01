@@ -17,6 +17,8 @@ const float Car::MAX_SPEED = 1;
 const float Car::MIN_SPEED = -0.2;
 const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.2;
 const float Car::MIN_SPEED_OUTSIDE_TRACK = -0.1;
+const float Car::MAX_BOOST_LOAD = 1.0;
+const float Car::BOOST_ACCELERATION = 0.01;
 
 Car::Car() {
 	this->race = nullptr;
@@ -28,14 +30,22 @@ Car::Car() {
 	this->turn_angle = 10;
 	this->turn_l = false;
 	this->turn_r = false;
+	this->boost_active = false;
+	this->boost_load = MAX_BOOST_LOAD;
 	lap = 0;
 	checkpoint = 0;
 }
 
 void Car::gas() {
-	if (speed >= 0)
-		speed += gas_acceleration;
-	else
+	if (speed >= 0) {
+		if (boost_active == false)
+			speed += gas_acceleration;
+
+		else {
+			speed += (gas_acceleration + BOOST_ACCELERATION);
+			boost_active = false;
+		}
+	} else
 		speed -= brake_acceleration;
 	limit_speed(MIN_SPEED, MAX_SPEED);
 }
@@ -77,6 +87,8 @@ Car::Car(Race *r, Rectangle& pos, float ga, float ia, float ba, Angle ta) {
 	checkpoint = 0;
 	this->turn_l = false;
 	this->turn_r = false;
+	this->boost_active = false;
+	this->boost_load = MAX_BOOST_LOAD;
 }
 
 void Car::turn_left() {
@@ -87,6 +99,15 @@ void Car::turn_left() {
 void Car::turn_right() {
 	if (speed != 0)
 		turn_r = true;
+}
+
+void Car::boost() {
+	if(boost_load > 0){
+		boost_active = true;
+		boost_load -= 0.01;
+	}
+	else
+		boost_active = false;
 }
 
 void Car::update() {
@@ -102,6 +123,9 @@ void Car::update() {
 	}
 	position = new_pos;
 	update_checkpoint();
+	if(boost_load < MAX_BOOST_LOAD)
+		boost_load += 0.001;
+	std::cout << boost_load << " " << boost_active << endl;
 }
 
 void Car::update_checkpoint() {

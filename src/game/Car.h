@@ -26,6 +26,7 @@ struct Car {
 	float gas_acceleration;
 	float idle_acceleration;
 	float brake_acceleration;
+	float boost_load;
 	Angle turn_angle;
 
 	int checkpoint;
@@ -41,7 +42,7 @@ struct Car {
 	std::vector<glm::vec3> normals;
 	int vertex_data_size;
 
-	bool turn_l, turn_r;
+	bool turn_l, turn_r, boost_active;
 
 	void limit_speed(float min, float max);
 
@@ -49,6 +50,8 @@ struct Car {
 	static const float MIN_SPEED;
 	static const float MAX_SPEED_OUTSIDE_TRACK;
 	static const float MIN_SPEED_OUTSIDE_TRACK;
+	static const float MAX_BOOST_LOAD;
+	static const float BOOST_ACCELERATION;
 
 	Car();
 	Car(Race* race, Rectangle& pos, float ga, float ia, float ba, Angle ta);
@@ -57,6 +60,7 @@ struct Car {
 	void brake();
 	void turn_left();
 	void turn_right();
+	void boost();
 
 	virtual void update();
 	virtual void update_checkpoint();

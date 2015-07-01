@@ -14,6 +14,7 @@
 #include "Checkpoint.h"
 #include "Camera.h"
 #include "Terrain.h"
+#include "Skybox.h"
 #include <vector>
 #include <ctime>
 using std::vector;
@@ -28,6 +29,7 @@ struct Race {
 	Terrain terrain;
 	clock_t start_time, curr_time;
 	vector<Checkpoint> checkpoints;
+	Skybox skybox;
 	bool paused;
 	int max_lap;
 
