@@ -44,6 +44,8 @@ const int RIGHT_ARROW = 259;
 Light gLight;
 Race race;
 
+void free_resources();
+
 inline float clamp(float x, float a, float b) {
     return x < a ? a : (x > b ? b : x);
 }
@@ -52,7 +54,7 @@ int init_resources() {
 	glClearColor(0.52f, 0.80f, 0.98f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
-	initText2D("resources/textures/Holstein.DDS");
+	initText2D("resources/textures/Arial.dds");
 
 
 	//light
@@ -191,9 +193,21 @@ void spec_key_up(int key, int x, int y) {
 	}
 }
 
+void game_restart() {
+	race.paused = false;
+	for (AICar& car : race.ai_cars) {
+		car.lap = 0;
+		car.checkpoint = 0;
+	}
+	free_resources();
+	init_resources();
+}
+
 float roty = 180;
 void idle() {
 	clock_t curr_time = clock();
+	if (keystates['r'])
+		//game_restart();
 	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
 		return;
 
@@ -204,10 +218,6 @@ void idle() {
 //			<< race.player_car.checkpoint << std::endl;
 	if (race.finished()) {
 		race.paused = true;
-		if (race.player_car.lap == race.max_lap)
-			std::cout << "You win!" << std::endl;
-		else
-			std::cout << "You lose!" << std::endl;
 		return;
 	}
 
@@ -232,6 +242,19 @@ void idle() {
 
 void print_hud_info() {
 
+	if(race.finished()) {
+		if (race.player_car.lap == race.max_lap)
+			printText2D("YOU WIN!", 350, 280, 40);
+		else
+			printText2D("YOU LOSE :(", 200, 280, 40);
+		return;
+	}
+	else
+		if(race.paused) {
+			printText2D("PAUSED", 280, 280, 40);
+			return;
+		}
+
 	char curr_speed[5];
 	snprintf(curr_speed, 6, "%f", fabs(race.camera.car->speed * 200));
 	printText2D(curr_speed, 50, 50, 50);
@@ -250,6 +273,7 @@ void print_hud_info() {
 	printText2D(act_lap, 420, 515, 40);
 	printText2D("of", 384, 525, 20);
 	printText2D(m_lap, 350, 515, 40);
+
 }
 
 void onDisplay() {
