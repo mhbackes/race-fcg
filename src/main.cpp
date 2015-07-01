@@ -33,6 +33,7 @@
 #include <fstream>
 
 sf::Music end, boost, music, engine, coin;
+int last_collision_sound;
 
 GLuint programID;
 GLuint mvpID;
@@ -277,10 +278,17 @@ void idle() {
 	}
 
 	int curr_check = race.player_car.checkpoint;
-		race.update();
+
+	race.update();
 	if(curr_check != race.player_car.checkpoint)
 		play_sound(coin, 30, 0);
 
+	//evita vários sons de colisão ao mesmo tempo
+	if((Car::collision_cout - last_collision_sound) > 20){
+		last_collision_sound = Car::collision_cout;
+		std::cout << "BOOM" << std::endl;
+		// TOCA O SOM DA COLISÃO
+	}
 }
 
 void print_hud_info() {

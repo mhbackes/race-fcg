@@ -20,6 +20,8 @@
 struct Race;
 
 struct Car {
+	static int collision_cout;
+
 	Race* race;
 	Rectangle position;
 	float speed;
