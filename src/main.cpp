@@ -157,6 +157,9 @@ void game_restart() {
 	race.player_car.speed = 0;
 	race.player_car.boost_load = Car::MAX_BOOST_LOAD;
 	race.paused = false;
+	engine.pause();
+	boost.pause();
+	end.pause();
 }
 
 void key_down(unsigned char key, int x, int y) {
@@ -247,7 +250,10 @@ void idle() {
 		return;
 
 	if (race.finished()) {
-		play_sound(end, 70, 1);
+		engine.pause();
+		boost.pause();
+		music.pause();
+		play_sound(end, 30, 1);
 		race.paused = true;
 		return;
 	}
@@ -266,7 +272,7 @@ void idle() {
 
 	if (keystates[' ']){
 		race.player_car.boost();
-		play_sound(boost, 100, 0);
+		play_sound(boost, 30, 0);
 	}
 
 	race.update();
@@ -335,7 +341,7 @@ void onDisplay() {
 	/**************************************************************************************************************/
 	//race.skybox.draw(mvp, modelID, mvpID, programID);
 	if(race.player_car.speed != 0)
-		play_sound(engine, 100, 1);
+		play_sound(engine, 50, 1);
 	else engine.pause();
 
 	race.player_car.draw(mvp, modelID, mvpID, programID);
