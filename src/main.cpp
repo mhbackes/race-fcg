@@ -16,21 +16,23 @@
 #include "GL/freeglut.h"
 
 // Include GLM
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
 #include "game/Race.h"
 #include "game/Car.h"
 #include "game/Camera.h"
 #include "game/Track.h"
 #include "game/Light.h"
+#include "SFML/Audio.hpp"
 
 #include "common/shader.hpp"
 #include "common/text2D.hpp"
 
 #include <iostream>
 #include <fstream>
+
+sf::Music end, boost, music, engine;
 
 GLuint programID;
 GLuint mvpID;
@@ -56,6 +58,9 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	initText2D("resources/textures/Arial.dds");
+	end.openFromFile("resources/etc/sound/end.wav");
+	boost.openFromFile("resources/etc/sound/boost.wav");
+	engine.openFromFile("resources/etc/sound/engine.wav");
 
 
 	//light
@@ -213,6 +218,13 @@ void spec_key_up(int key, int x, int y) {
 	}
 }
 
+void play_sound(sf::Music& sound, int volume, bool loop) {
+	sound.pause();
+	sound.setLoop(loop);
+	sound.setVolume(volume);
+	sound.play();
+}
+
 float roty = 180;
 void idle() {
 	clock_t curr_time = clock();
@@ -235,6 +247,7 @@ void idle() {
 		return;
 
 	if (race.finished()) {
+		play_sound(end, 70, 1);
 		race.paused = true;
 		return;
 	}
@@ -250,8 +263,11 @@ void idle() {
 		race.player_car.turn_left();
 	if (keystates['d'] || keystates[RIGHT_ARROW])
 		race.player_car.turn_right();
-	if (keystates[' '])
+
+	if (keystates[' ']){
 		race.player_car.boost();
+		play_sound(boost, 100, 0);
+	}
 
 	race.update();
 
@@ -318,6 +334,10 @@ void onDisplay() {
 			glm::value_ptr(Light::ambient_component));
 	/**************************************************************************************************************/
 	//race.skybox.draw(mvp, modelID, mvpID, programID);
+	if(race.player_car.speed != 0)
+		play_sound(engine, 100, 1);
+	else engine.pause();
+
 	race.player_car.draw(mvp, modelID, mvpID, programID);
 	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID,
 			programID);
