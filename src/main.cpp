@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "GL/glew.h"
 #include "GL/freeglut.h"
@@ -134,6 +135,25 @@ int init_resources() {
 
 }
 
+void game_restart() {
+	int i = race.ai_cars.size();
+	for (AICar& car : race.ai_cars) {
+		car.lap = 0;
+		car.checkpoint = 0;
+		car.position = Rectangle(Point((100 - (i - 1) * 15), -24.5),
+				Angle(180), 6.52, 2.6);
+		car.speed = 0;
+		i--;
+	}
+	race.player_car.position = Rectangle(Point(30, -24.5),
+			Angle(180), 6.52,2.6);
+	race.player_car.lap = 0;
+	race.player_car.checkpoint = 0;
+	race.player_car.speed = 0;
+	race.player_car.boost_load = Car::MAX_BOOST_LOAD;
+	race.paused = false;
+}
+
 void key_down(unsigned char key, int x, int y) {
 	keystates[key] = true;
 
@@ -193,37 +213,27 @@ void spec_key_up(int key, int x, int y) {
 	}
 }
 
-void game_restart() {
-	int i = race.ai_cars.size();
-	for (AICar& car : race.ai_cars) {
-		car.lap = 0;
-		car.checkpoint = 0;
-		car.position = Rectangle(Point((100 - (i - 1) * 15), -24.5),
-				Angle(180), 6.52, 2.6);
-		car.speed = Car::MIN_SPEED;
-		i--;
-	}
-	race.player_car.position = Rectangle(Point(30, -24.5),
-			Angle(180), 6.52,2.6);
-	race.player_car.lap = 0;
-	race.player_car.checkpoint = 0;
-	race.player_car.speed = Car::MIN_SPEED;
-	race.paused = false;
-}
-
 float roty = 180;
 void idle() {
 	clock_t curr_time = clock();
 	if (keystates['r'])
 		game_restart();
+
+	if (keystates[27]) {
+		printText2D("TCHAU!", 300, 280, 40);
+		glutSwapBuffers();
+		glutPostRedisplay();
+		sleep(2);
+		glutLeaveMainLoop();
+		return;
+	}
+
 	if ((curr_time - race.curr_time) < Race::clocks_per_frame) // sets fps to 60
 		return;
 
 	if (race.paused)
 		return;
 
-//	std::cout << "Lap: " << race.player_car.lap << " Check: "
-//			<< race.player_car.checkpoint << std::endl;
 	if (race.finished()) {
 		race.paused = true;
 		return;
@@ -244,7 +254,6 @@ void idle() {
 		race.player_car.boost();
 
 	race.update();
-	//printf("Light position: (%f, %f, %f)\n", gLight.position[0], gLight.position[1], gLight.position[2] );
 
 }
 
@@ -312,19 +321,10 @@ void onDisplay() {
 	race.player_car.draw(mvp, modelID, mvpID, programID);
 	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID,
 			programID);
-//	std::cout << "Position: " << race.player_car.position.center.to_string()
-//			<< " Check: " << race.player_car.checkpoint << " Lap: "
-//			<< race.player_car.lap << " Speed: " << race.player_car.speed
-//			<< std::endl;
-	for (AICar& car : race.ai_cars) {
+
+	for (AICar& car : race.ai_cars)
 		car.draw(mvp, modelID, mvpID, programID);
-//		race.checkpoints[car.checkpoint].draw(mvp, modelID, mvpID);
-//		std::cout << "Position: "
-//				<< car.position.center.to_string()
-//				<< " Check: " << car.checkpoint << " Lap: "
-//				<< car.lap << " Speed: " << car.speed
-//				<< std::endl;
-	}
+
 	race.track.draw(mvp, modelID, mvpID, programID);
 	race.terrain.draw(mvp, modelID, mvpID, programID);
 
