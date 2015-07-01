@@ -19,6 +19,7 @@ const float Car::MAX_SPEED_OUTSIDE_TRACK = 0.2;
 const float Car::MIN_SPEED_OUTSIDE_TRACK = -0.1;
 const float Car::MAX_BOOST_LOAD = 1.0;
 const float Car::BOOST_ACCELERATION = 0.01;
+int Car::collision_cout = 0;
 
 Car::Car() {
 	this->race = nullptr;
@@ -300,6 +301,7 @@ bool Car::collides(Rectangle& pos) {
 }
 
 void Car::collision_speed(Car& car) {
+	collision_cout++;
 	Angle diff_angle = position.angle - car.position.angle;
 	float diff = diff_angle.get_degree();
 	if (diff < 60 || diff > 300) { //parallel semi-inelastic collision

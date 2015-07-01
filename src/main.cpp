@@ -33,6 +33,7 @@
 #include <fstream>
 
 sf::Music end, boost, music, engine, coin;
+int last_collision_sound;
 
 GLuint programID;
 GLuint mvpID;
@@ -50,7 +51,7 @@ Race race;
 void free_resources();
 
 inline float clamp(float x, float a, float b) {
-    return x < a ? a : (x > b ? b : x);
+	return x < a ? a : (x > b ? b : x);
 }
 
 int init_resources() {
@@ -79,11 +80,11 @@ int init_resources() {
 
 	glActiveTexture(GL_TEXTURE0);
 	/*race.skybox.load_model("resources/textures/f.bmp",
-			"resources/textures/b.bmp",
-			"resources/textures/l.bmp",
-			"resources/textures/r.bmp",
-			"resources/textures/t.bmp",
-			"resources/textures/bt.bmp", programID); */
+	 "resources/textures/b.bmp",
+	 "resources/textures/l.bmp",
+	 "resources/textures/r.bmp",
+	 "resources/textures/t.bmp",
+	 "resources/textures/bt.bmp", programID); */
 	//player car
 	Rectangle car_pos(Point(30, -24.5), Angle(180), 6.52, 2.6);
 	race.player_car = Car(&race, car_pos, 0.001, -0.001, -0.009, 1.2);
@@ -146,13 +147,13 @@ void game_restart() {
 	for (AICar& car : race.ai_cars) {
 		car.lap = 0;
 		car.checkpoint = 0;
-		car.position = Rectangle(Point((100 - (i - 1) * 15), -24.5),
-				Angle(180), 6.52, 2.6);
+		car.position = Rectangle(Point((100 - (i - 1) * 15), -24.5), Angle(180),
+				6.52, 2.6);
 		car.speed = 0;
 		i--;
 	}
-	race.player_car.position = Rectangle(Point(30, -24.5),
-			Angle(180), 6.52,2.6);
+	race.player_car.position = Rectangle(Point(30, -24.5), Angle(180), 6.52,
+			2.6);
 	race.player_car.lap = 0;
 	race.player_car.checkpoint = 0;
 	race.player_car.speed = 0;
@@ -271,32 +272,37 @@ void idle() {
 	if (keystates['d'] || keystates[RIGHT_ARROW])
 		race.player_car.turn_right();
 
-	if (keystates[' ']){
+	if (keystates[' ']) {
 		race.player_car.boost();
 		play_sound(boost, 30, 0);
 	}
 
 	int curr_check = race.player_car.checkpoint;
-		race.update();
+
+	race.update();
 	if(curr_check != race.player_car.checkpoint)
 		play_sound(coin, 30, 0);
 
+	//evita vários sons de colisão ao mesmo tempo
+	if((Car::collision_cout - last_collision_sound) > 20){
+		last_collision_sound = Car::collision_cout;
+		std::cout << "BOOM" << std::endl;
+		// TOCA O SOM DA COLISÃO
+	}
 }
 
 void print_hud_info() {
 
-	if(race.finished()) {
+	if (race.finished()) {
 		if (race.player_car.lap == race.max_lap)
 			printText2D("YOU WIN!", 350, 280, 40);
 		else
 			printText2D("YOU LOSE :(", 200, 280, 40);
 		return;
+	} else if (race.paused) {
+		printText2D("PAUSED", 280, 280, 40);
+		return;
 	}
-	else
-		if(race.paused) {
-			printText2D("PAUSED", 280, 280, 40);
-			return;
-		}
 
 	char curr_speed[5];
 	snprintf(curr_speed, 6, "%f", fabs(race.camera.car->speed * 200));
@@ -305,7 +311,8 @@ void print_hud_info() {
 	printText2D("SPEED", 50, 100, 20);
 
 	char boost_n[3];
-	snprintf(boost_n, 4, "%d", (int)clamp((race.player_car.boost_load*100), 0, 100));
+	snprintf(boost_n, 4, "%d",
+			(int) clamp((race.player_car.boost_load * 100), 0, 100));
 	printText2D(boost_n, 600, 50, 50);
 	printText2D("BOOST", 600, 100, 20);
 
@@ -344,9 +351,11 @@ void onDisplay() {
 			glm::value_ptr(Light::ambient_component));
 	/**************************************************************************************************************/
 	//race.skybox.draw(mvp, modelID, mvpID, programID);
+
 	if(race.player_car.speed != 0 && !race.finished())
 		play_sound(engine, 50, 1);
-	else engine.pause();
+	else
+		engine.pause();
 
 	race.player_car.draw(mvp, modelID, mvpID, programID);
 	race.checkpoints[race.player_car.checkpoint].draw(mvp, modelID, mvpID,
@@ -369,10 +378,19 @@ void free_resources() {
 
 	glDeleteBuffers(1, &race.player_car.vertexBuffer);
 	glDeleteVertexArrays(1, &race.player_car.vertexID);
+	for (AICar& car : race.ai_cars) {
+		glDeleteBuffers(1, &car.vertexBuffer);
+		glDeleteVertexArrays(1, &car.vertexID);
+	}
 	glDeleteBuffers(1, &race.track.vertexBuffer);
 	glDeleteVertexArrays(1, &race.track.vertexID);
-	glDeleteProgram(programID);
+	glDeleteBuffers(1, &race.terrain.vertexBuffer);
+	glDeleteVertexArrays(1, &race.terrain.vertexID);
+	glDeleteBuffers(1, &Checkpoint::vertexBuffer);
+	glDeleteVertexArrays(1, &Checkpoint::vertexID);
 
+	glDeleteProgram(programID);
+	cleanupText2D();
 }
 
 int main(int argc, char* argv[]) {
