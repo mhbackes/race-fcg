@@ -235,7 +235,8 @@ void print_hud_info() {
 	char curr_speed[5];
 	snprintf(curr_speed, 6, "%f", fabs(race.camera.car->speed * 200));
 	printText2D(curr_speed, 50, 50, 50);
-	printText2D("Velocidade", 50, 100, 20);
+	printText2D("Mph", 280, 25, 20);
+	printText2D("SPEED", 50, 100, 20);
 
 	char boost_n[3];
 	snprintf(boost_n, 4, "%d", (int)clamp((race.player_car.boost_load*100), 0, 100));
