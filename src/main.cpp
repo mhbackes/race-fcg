@@ -32,7 +32,7 @@
 #include <iostream>
 #include <fstream>
 
-sf::Music end, boost, music, engine;
+sf::Music end, boost, music, engine, coin;
 
 GLuint programID;
 GLuint mvpID;
@@ -58,10 +58,11 @@ int init_resources() {
 	glEnable(GL_DEPTH_TEST);
 
 	initText2D("resources/textures/Arial.dds");
+
 	end.openFromFile("resources/etc/sound/end.wav");
 	boost.openFromFile("resources/etc/sound/boost.wav");
 	engine.openFromFile("resources/etc/sound/engine.wav");
-
+	coin.openFromFile("resources/etc/sound/coin.ogg");
 
 	//light
 	Light::position = glm::vec3(0.0f, 20.0f, 0.0f);
@@ -275,7 +276,10 @@ void idle() {
 		play_sound(boost, 30, 0);
 	}
 
-	race.update();
+	int curr_check = race.player_car.checkpoint;
+		race.update();
+	if(curr_check != race.player_car.checkpoint)
+		play_sound(coin, 30, 0);
 
 }
 
@@ -307,7 +311,7 @@ void print_hud_info() {
 
 	char m_lap[2], act_lap[2];
 	snprintf(act_lap, 3, "%d", (race.max_lap));
-	snprintf(m_lap, 3, "%d", (race.player_car.lap));
+	snprintf(m_lap, 3, "%d", (race.player_car.lap + 1));
 	printText2D("LAP", 340, 550, 30);
 	printText2D(act_lap, 420, 515, 40);
 	printText2D("of", 384, 525, 20);
